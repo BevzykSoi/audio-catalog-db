@@ -4,16 +4,16 @@ const helmet = require('helmet');
 const cors = require('cors');
 require('dotenv').config();
 require("./config/db");
+require('./config/passport');
 
 const app = express();
+const apiRouter = require('./routes/apiRouter');
 
 app.use(express.json());
 app.use(volleyball);
 app.use(helmet());
 app.use(cors({ origin: '*' }));
 
-app.get('/', (req, res) => {
-  res.json({ message: 'Hello, World!' });
-});
+app.use('/api/v1', apiRouter);
 
 module.exports = app;
