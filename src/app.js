@@ -3,7 +3,7 @@ const volleyball = require('volleyball');
 const helmet = require('helmet');
 const cors = require('cors');
 const swagger = require("swagger-ui-express");
-const swaggerApi = require("./openapi.json");
+const swaggerApi = require("./api.json");
 const cloudinary = require("cloudinary").v2;
 
 require('dotenv').config();

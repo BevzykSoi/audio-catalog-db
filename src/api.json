@@ -1,8 +1,8 @@
 {
   "openapi": "3.0.3",
   "info": {
-    "title": "Audio Catalog",
-    "description": "This is Audio Catalog app API\n\nServer repositories:\n- [Team 1](https://github.com/swagger-api/swagger-petstore)\n- [Team 2](https://github.com/swagger-api/swagger-petstore)",
+    "title": "Audio Catalog API",
+    "description": "This is Audio Catalog app API\n\nRepositories:\n- [Github](https://github.com/BevzykSoi/audio-catalog-db)",
     "license": {
       "name": "Apache 2.0",
       "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
