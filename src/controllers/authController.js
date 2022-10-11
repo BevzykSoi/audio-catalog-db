@@ -13,6 +13,7 @@ exports.register = async (req, res, next) => {
 
     if (existingUser) {
       res.status(422).send('Username already in use!');
+      return;
     }
 
     const hashedPassword = await bcrypt.hash(password, 12);
@@ -28,7 +29,7 @@ exports.register = async (req, res, next) => {
 
     const token = jwt.generateJwt(payload);
 
-    res.josn({
+    res.json({
         "message": "You've been signed up!",
         "token": token,
         user,

@@ -1,5 +1,4 @@
 const { Schema, model } = require('mongoose');
-const defaultAvatar = require('../../public/defaultImages/defaultAvatar.png');
 
 const Profile = new Schema(
   {
@@ -20,7 +19,8 @@ const Profile = new Schema(
     avatarUrl: {
       type: String,
       required: true,
-      default: defaultAvatar,
+      default:
+        'https://res.cloudinary.com/bevzyksoi/image/upload/v1665503880/defaultAvatar_jifgdp.png',
     },
     banner: String,
     genres: [

@@ -17,7 +17,7 @@ module.exports = new Strategy(
       }
 
       const token = req.headers.authorization.slice(7);
-      if (user.token !== token) {
+      if (!user || !token) {
         done(null, false);
         return;
       }
