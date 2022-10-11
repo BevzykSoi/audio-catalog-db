@@ -28,12 +28,9 @@ exports.register = async (req, res, next) => {
 
     const token = jwt.generateJwt(payload);
 
-    user.token = token;
-    await user.save();
-
     res.josn({
         "message": "You've been signed up!",
-        "token": user.token,
+        "token": token,
         user,
     });
   } catch (error) {
@@ -67,12 +64,9 @@ exports.login = async (req, res, next) => {
 
     const token = jwt.generateJwt(payload);
 
-    user.token = token;
-    await user.save();
-
     res.json({
         "message": "You've been logged in!",
-        "token": user.token,
+        "token": token,
         user,
     });
   } catch (error) {
@@ -82,12 +76,8 @@ exports.login = async (req, res, next) => {
 
 exports.logout = async (req, res, next) => {
   try {
-    req.user.token = null;
-    await req.user.save();
-
     res.json({
       "message": "You've been logged out!",
-      "user": req.user,
     });
   } catch (error) {
     next(error);
