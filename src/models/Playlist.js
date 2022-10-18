@@ -1,39 +1,21 @@
 const { Schema, model } = require('mongoose');
 
-const Audio = new Schema(
+const Playlist = new Schema(
   {
     name: {
       type: String,
       required: true,
     },
-    fileUrl: {
-      type: String,
-      required: true,
-    },
-    coverUrl: {
-      type: String,
-      required: true,
-    },
-    author: {
+    audios: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'audio',
+      },
+    ],
+    owner: {
       type: Schema.Types.ObjectId,
       ref: 'user',
     },
-    usersLiked: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: 'user',
-      },
-    ],
-    listenCount: {
-      type: Number,
-      default: 0,
-    },
-    playlists: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: 'playlist',
-      },
-    ],
     genres: [
       {
         type: String,
@@ -58,4 +40,4 @@ const Audio = new Schema(
   }
 );
 
-module.exports = model('audio', Audio);
+module.exports = model('playlist', Playlist);

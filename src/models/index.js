@@ -1,3 +1,6 @@
 module.exports = {
-    Audio: require('./Audio'),
-  };
+  User: require('./User'),
+  Profile: require('./Profile'),
+  Audio: require('./Audio'),
+  Playlist: require('./Playlist'),
+};
