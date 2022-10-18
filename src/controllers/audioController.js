@@ -10,7 +10,6 @@ exports.getAll = async (req, res, next) => {
 };
 
 
-
 exports.create = async (req, res, next) => {
   try {
    
@@ -37,7 +36,6 @@ exports.update = async (req, res, next) => {
   try {
     const { id } = req.params;
 
-
     const audio = await Audio.findByIdAndUpdate(id, req.body, {
       new: true,
     });
@@ -51,8 +49,8 @@ exports.delete = async (req, res, next) => {
   try {
     const { id } = req.params;
    
-    const audio1 = await Contact.findByIdAndDelete(id);
-    res.json(audio1);
+    const audio = await Contact.findByIdAndDelete(id);
+    res.json(audio);
   } catch (error) {
     next(error);
   }
@@ -60,7 +58,7 @@ exports.delete = async (req, res, next) => {
 exports.favorite = async (req, res, next) => {
   const { audioId } = req.params;
   if (!req.body) {
-    return res.status(400).json({ message: "missing field favorite" });
+    return res.status(400).json({ message: "Missing field favorite in the audio!" });
   }
   try {
     const updatedAudio = await Audio.findByIdAndUpdate(
