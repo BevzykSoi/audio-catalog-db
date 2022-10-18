@@ -37,7 +37,7 @@
         "requestBody": {
           "description": "Register data",
           "content": {
-            "application/json": {
+            "multipart/form-data": {
               "schema": {
                 "type": "object",
                 "properties": {
@@ -46,6 +46,17 @@
                   },
                   "password": {
                     "type": "string"
+                  },
+                  "language": {
+                    "type": "string"
+                  },
+                  "banner": {
+                    "type": "string",
+                    "format": "binary"
+                  },
+                  "avatar": {
+                    "type": "string",
+                    "format": "binary"
                   }
                 }
               }
@@ -125,11 +136,11 @@
         }
       }
     },
-    "/auth/logout": {
-      "post": {
+    "/auth/profile": {
+      "get": {
         "tags": ["Auth"],
-        "summary": "Logout existing user",
-        "operationId": "logoutUser",
+        "summary": "Get authorized user data",
+        "operationId": "getAuthUser",
         "security": [
           {
             "jwt_auth": []
@@ -155,16 +166,16 @@
             }
           },
           "401": {
-            "description": "Unathorized"
+            "description": "Unauthorized"
           }
         }
       }
     },
-    "/auth/profile": {
-      "get": {
+    "/auth/logout": {
+      "post": {
         "tags": ["Auth"],
-        "summary": "Get authorized user data",
-        "operationId": "getAuthUser",
+        "summary": "Logout user",
+        "operationId": "logoutUser",
         "security": [
           {
             "jwt_auth": []
