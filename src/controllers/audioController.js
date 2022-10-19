@@ -13,8 +13,8 @@ exports.getAll = async (req, res, next) => {
 exports.create = async (req, res, next) => {
   try {
    
-    const newallAudio = await Audio.create(req.body);
-    res.status(201).json(newallAudio);
+    const newAudio = await Audio.create(req.body);
+    res.status(201).json(newAudio);
   
   } catch (error) {
     next(error);
