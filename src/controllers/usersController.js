@@ -1,4 +1,4 @@
-const { User } = require('../models');
+const { User, Profile } = require('../models');
 
 exports.getUser = async (req, res, next) => {
   try {
@@ -16,7 +16,28 @@ exports.getUser = async (req, res, next) => {
 
 exports.updateUser = async (req, res, next) => {
   try {
-    
+    const { id } = req.params;
+    const { language, theme, saveHistory } = req.body;
+
+    if (id !== req.user._id.toString()) {
+      res.status(401).send('Not authorized!');
+      return;
+    }
+
+    const userProfile = await Profile.findByIdAndUpdate(req.user.profile.toString(), {
+      language,
+      theme,
+      saveHistory,
+    }, {
+      new: true,
+    });
+
+    if (!userProfile) {
+      res.status(404).send('Product did not found!');
+      return;
+    }
+
+    res.json(userProfile);
   } catch (error) {
     next(error);
   }
@@ -24,6 +45,15 @@ exports.updateUser = async (req, res, next) => {
 
 exports.updateUserAvatar = async (req, res, next) => {
   try {
+    const { id } = req.params;
+    const { avatar } = req.body;
+
+    if (id !== req.user._id.toString()) {
+      res.status(401).send('Not authorized!');
+      return;
+    }
+
+    //TO-DO
   } catch (error) {
     next(error);
   }
@@ -31,6 +61,7 @@ exports.updateUserAvatar = async (req, res, next) => {
 
 exports.updateUserBanner = async (req, res, next) => {
   try {
+    //TO-DO
   } catch (error) {
     next(error);
   }
