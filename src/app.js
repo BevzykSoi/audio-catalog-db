@@ -2,16 +2,20 @@ const express = require('express');
 const volleyball = require('volleyball');
 const helmet = require('helmet');
 const cors = require('cors');
-const swagger = require("swagger-ui-express");
-const swaggerApi = require("./api.json");
-const cloudinary = require("cloudinary").v2;
+const swagger = require('swagger-ui-express');
+const swaggerApi = require('./api.json');
+const path = require('path');
+const fs = require('fs').promises;
+const Jimp = require('jimp');
+const cloudinary = require('cloudinary').v2;
 
 require('dotenv').config();
-require("./config/db");
+require('./config/db');
 require('./config/passport');
 
 const app = express();
 const apiRouter = require('./routes/apiRouter');
+const staticFolderPath = path.join(process.cwd(), 'public');
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -19,11 +23,12 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
+app.use(express.static(staticFolderPath));
 app.use(express.json());
 app.use(volleyball);
 app.use(helmet());
 app.use(cors({ origin: '*' }));
-app.use("/docs", swagger.serve, swagger.setup(swaggerApi));
+app.use('/docs', swagger.serve, swagger.setup(swaggerApi));
 
 app.use('/api/v1', apiRouter);
 

@@ -1,4 +1,12 @@
 const { User, Profile } = require('../models');
+const fs = require('fs').promises;
+const Jimp = require('jimp');
+const cloudinary = require('cloudinary').v2;
+
+const path = require('path');
+const avatarsPath = path.join(process.cwd(), 'public/avatars');
+const audiossPath = path.join(process.cwd(), 'public/audios');
+const bannersPath = path.join(process.cwd(), 'public/banners');
 
 exports.getUser = async (req, res, next) => {
   try {
@@ -46,14 +54,30 @@ exports.updateUser = async (req, res, next) => {
 exports.updateUserAvatar = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const { avatar } = req.body;
 
     if (id !== req.user._id.toString()) {
       res.status(401).send('Not authorized!');
       return;
     }
 
-    //TO-DO
+    console.log(req.file);
+
+    const uploadedImage = await Jimp.read(req.file.path);
+    const editedImagePath = path.join(avatarsPath, req.file.filename);
+    await uploadedImage
+      .resize(128, 128)
+      .quality(50)
+      .circle()
+      .writeAsync(editedImagePath);
+    await fs.unlink(req.file.path);
+    const uploadResponse = await cloudinary.uploader.upload(editedImagePath);
+
+    
+    const user = await User.findById(id);
+    user.profile.avatarUrl = uploadResponse;
+    await user.save();
+
+    res.json(user.profile);
   } catch (error) {
     next(error);
   }
