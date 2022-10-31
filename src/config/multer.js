@@ -35,13 +35,13 @@ const bannerStorage = multer.diskStorage({
 });
 
 exports.avatarUpload = multer({
-  avatarStorage,
+  storage: avatarStorage,
 });
 
 exports.audiosUpload = multer({
-  audioStorage,
+  storage: audioStorage,
 });
 
 exports.bannerUpload = multer({
-  bannerStorage,
+  storage: bannerStorage,
 });

@@ -32,13 +32,17 @@ exports.updateUser = async (req, res, next) => {
       return;
     }
 
-    const userProfile = await Profile.findByIdAndUpdate(req.user.profile.toString(), {
-      language,
-      theme,
-      saveHistory,
-    }, {
-      new: true,
-    });
+    const userProfile = await Profile.findByIdAndUpdate(
+      req.user.profile.toString(),
+      {
+        language,
+        theme,
+        saveHistory,
+      },
+      {
+        new: true,
+      }
+    );
 
     if (!userProfile) {
       res.status(404).send('Product did not found!');
@@ -60,8 +64,6 @@ exports.updateUserAvatar = async (req, res, next) => {
       return;
     }
 
-    console.log(req.file);
-
     const uploadedImage = await Jimp.read(req.file.path);
     const editedImagePath = path.join(avatarsPath, req.file.filename);
     await uploadedImage
@@ -69,15 +71,20 @@ exports.updateUserAvatar = async (req, res, next) => {
       .quality(50)
       .circle()
       .writeAsync(editedImagePath);
+    const newAvatar = await cloudinary.uploader.upload(editedImagePath);
     await fs.unlink(req.file.path);
-    const uploadResponse = await cloudinary.uploader.upload(editedImagePath);
 
-    
-    const user = await User.findById(id);
-    user.profile.avatarUrl = uploadResponse;
-    await user.save();
+    const userProfile = await Profile.findByIdAndUpdate(
+      req.user.profile.toString(),
+      {
+        avatarUrl: newAvatar.secure_url,
+      },
+      {
+        new: true,
+      }
+    );
 
-    res.json(user.profile);
+    res.json(userProfile);
   } catch (error) {
     next(error);
   }
