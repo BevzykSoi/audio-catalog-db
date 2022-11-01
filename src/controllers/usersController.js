@@ -49,7 +49,7 @@ exports.updateUser = async (req, res, next) => {
     );
 
     if (!userProfile) {
-      res.status(404).send('Profile did not found!');
+      res.status(404).send('User did not found!');
       return;
     }
 
@@ -58,8 +58,6 @@ exports.updateUser = async (req, res, next) => {
     next(error);
   }
 };
-
-
 
 exports.updateUserAvatar = async (req, res, next) => {
   try {
