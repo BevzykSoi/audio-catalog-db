@@ -5,7 +5,6 @@ const cloudinary = require('cloudinary').v2;
 
 const path = require('path');
 const avatarsPath = path.join(process.cwd(), 'public/avatars');
-const audiossPath = path.join(process.cwd(), 'public/audios');
 const bannersPath = path.join(process.cwd(), 'public/banners');
 
 exports.getUser = async (req, res, next) => {
@@ -13,6 +12,11 @@ exports.getUser = async (req, res, next) => {
     const { id } = req.params;
 
     const user = await User.findById(id);
+
+    if (!user) {
+      res.status(404).send('User did not found!');
+      return;
+    }
 
     res.json({
       user,
@@ -45,7 +49,7 @@ exports.updateUser = async (req, res, next) => {
     );
 
     if (!userProfile) {
-      res.status(404).send('Product did not found!');
+      res.status(404).send('Profile did not found!');
       return;
     }
 
@@ -68,7 +72,7 @@ exports.updateUserAvatar = async (req, res, next) => {
     const editedImagePath = path.join(avatarsPath, req.file.filename);
     await uploadedImage
       .resize(128, 128)
-      .quality(50)
+      .quality(70)
       .circle()
       .writeAsync(editedImagePath);
     const newAvatar = await cloudinary.uploader.upload(editedImagePath);
@@ -77,12 +81,17 @@ exports.updateUserAvatar = async (req, res, next) => {
     const userProfile = await Profile.findByIdAndUpdate(
       req.user.profile.toString(),
       {
-        avatarUrl: newAvatar.secure_url,
+        banner: newAvatar.secure_url,
       },
       {
         new: true,
       }
     );
+
+    if (!userProfile) {
+      res.status(404).send('Profile did not found!');
+      return;
+    }
 
     res.json(userProfile);
   } catch (error) {
@@ -92,7 +101,35 @@ exports.updateUserAvatar = async (req, res, next) => {
 
 exports.updateUserBanner = async (req, res, next) => {
   try {
-    //TO-DO
+    const { id } = req.params;
+
+    if (id !== req.user._id.toString()) {
+      res.status(401).send('Not authorized!');
+      return;
+    }
+
+    const uploadedImage = await Jimp.read(req.file.path);
+    const editedImagePath = path.join(bannersPath, req.file.filename);
+    await uploadedImage.quality(70).writeAsync(editedImagePath);
+    const newBanner = await cloudinary.uploader.upload(editedImagePath);
+    await fs.unlink(req.file.path);
+
+    const userProfile = await Profile.findByIdAndUpdate(
+      req.user.profile.toString(),
+      {
+        banner: newBanner.secure_url,
+      },
+      {
+        new: true,
+      }
+    );
+
+    if (!userProfile) {
+      res.status(404).send('Profile did not found!');
+      return;
+    }
+
+    res.json(userProfile);
   } catch (error) {
     next(error);
   }
@@ -105,6 +142,11 @@ exports.getUserAudios = async (req, res, next) => {
     const user = await User.findById(id).populate({
       path: 'createdAudios',
     });
+
+    if (!user) {
+      res.status(404).send('User did not found!');
+      return;
+    }
 
     res.json({
       "User's audios": user.createdAudios,
@@ -122,6 +164,11 @@ exports.getUserLikes = async (req, res, next) => {
       path: 'likedAudios',
     });
 
+    if (!user) {
+      res.status(404).send('User did not found!');
+      return;
+    }
+
     res.json({
       "User's likes": user.likedAudios,
     });
@@ -137,6 +184,11 @@ exports.getUserHistory = async (req, res, next) => {
     const user = await User.findById(id).populate({
       path: 'history',
     });
+
+    if (!user) {
+      res.status(404).send('User did not found!');
+      return;
+    }
 
     res.json({
       "User's history": user.history,
@@ -154,6 +206,11 @@ exports.getUserFollowings = async (req, res, next) => {
       path: 'following',
     });
 
+    if (!user) {
+      res.status(404).send('User did not found!');
+      return;
+    }
+
     res.json({
       "User's followings": user.following,
     });
@@ -169,6 +226,11 @@ exports.getUserFollowers = async (req, res, next) => {
     const user = await User.findById(id).populate({
       path: 'followers',
     });
+
+    if (!user) {
+      res.status(404).send('User did not found!');
+      return;
+    }
 
     res.json({
       "User's followers": user.followers,
