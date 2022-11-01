@@ -10,17 +10,25 @@ exports.getAll = async (req, res, next) => {
 };
 
 
-
-exports.create = async (req, res, next) => {
+exports.getAllTop = async (req, res, next) => {
   try {
-   
-    const newallAudio = await Audio.create(req.body);
-    res.status(201).json(newallAudio);
-  
+    const getAllTop = await Audio.find(usersLiked);
+    res.json(getAllTop);
   } catch (error) {
     next(error);
   }
 };
+
+
+exports.getAllNew = async (req, res, next) => {
+  try {
+    const getAllNew = await Audio.find(create);
+    res.json(getAllNew);
+  } catch (error) {
+    next(error);
+  }
+};
+
 
 exports.getById = async (req, res, next) => {
   try {
