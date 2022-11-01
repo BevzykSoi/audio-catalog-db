@@ -59,6 +59,8 @@ exports.updateUser = async (req, res, next) => {
   }
 };
 
+
+
 exports.updateUserAvatar = async (req, res, next) => {
   try {
     const { id } = req.params;
@@ -242,6 +244,21 @@ exports.getUserFollowers = async (req, res, next) => {
 
 exports.followUser = async (req, res, next) => {
   try {
+    // User.findById(req.params.user_id)
+    //     .then(user => {
+    //         if (user.followers.filter(follower =>
+    //                 follower.user.toString() === req.user.id).length > 0) {
+    //             return res.status(400).json({ alreadyfollow: "You already followed the user" })
+    //         }
+    //         user.followers.unshift({ user: req.user.id });
+    //         user.save()
+    //         User.findOne({ email: req.user.email })
+    //             .then(user => {
+    //                 user.following.unshift({ user: req.params.user_id });
+    //                 user.save().then(user => res.json(user))
+    //             })
+    //             .catch(err => res.status(404).json({ alradyfollow: "you already followed the user" }))
+    //     })
   } catch (error) {
     next(error);
   }
