@@ -10,16 +10,36 @@ exports.getAll = async (req, res, next) => {
 };
 
 
+exports.getAllTop = async (req, res, next) => {
+ 
+  try {
+   const allAudiosTOP = await Audio.find().sort({ listenCount: -1 })
 exports.create = async (req, res, next) => {
   try {
    
     const newAudio = await Audio.create(req.body);
     res.status(201).json(newAudio);
   
-  } catch (error) {
+    res.json(allAudiosTOP);}
+    catch (error) {
     next(error);
   }
 };
+
+
+exports.getAllNew = async (req, res, next) => {
+
+ 
+    try {
+   const allAudiosNEW = await Audio.find().sort({ createdAt: -1, updatedAt: -1 });
+    
+      res.json(allAudiosNEW);}
+      catch (error) {
+      next(error);
+    
+  };
+};
+
 
 exports.getById = async (req, res, next) => {
   try {
