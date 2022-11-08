@@ -66,7 +66,7 @@ router.post(
   }
 );
 router.get('/', audioController.getAll);
-router.patch('/:id/like', audioController.favorite); 
+router.patch('/:audioId/like',auth, audioController.favorite); 
 router.get('/top', audioController.getAllTop); 
 router.get('/new', audioController.getAllNew); 
 router.delete('/:id', audioController.delete); 
