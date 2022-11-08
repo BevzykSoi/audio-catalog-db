@@ -58,13 +58,13 @@ router.post(
 
     res.json(newAudio);
   }
-);
+);//
 router.get('/', audioController.getAll);//
 
 router.get('/:id', audioController.getById);//
 router.patch('/:id/favorite', audioController.favorite);//
 router.get('/top', audioController.getAllTop);//
 router.get('/new', audioController.getAllNew);//
-// router.delete('/:id', audioController.delete);
+router.delete('/:id', audioController.delete);//
 
 module.exports = router;

@@ -65,7 +65,7 @@ exports.delete = async (req, res, next) => {
   try {
     const { id } = req.params;
    
-    const audio1 = await Contact.findByIdAndDelete(id);
+    const audio1 = await Audio.findByIdAndDelete(id);
     res.json(audio1);
   } catch (error) {
     next(error);
@@ -95,4 +95,4 @@ exports.favorite = async (req, res, next) => {
   } catch (error) {
     res.status(500).json({ message: "Something went wrong, Not found" });
   }
-};
+}; 
