@@ -65,10 +65,10 @@ router.post(
     }
   }
 );
-
-router.patch('/:id/favorite', audioController.favorite); //
-router.get('/top', audioController.getAllTop); //
-router.get('/new', audioController.getAllNew); //
-router.delete('/:id', audioController.delete); //
-router.get('/:id', audioController.getById); //
+router.get('/', audioController.getAll);
+router.patch('/:id/favorite', audioController.favorite); 
+router.get('/top', audioController.getAllTop); 
+router.get('/new', audioController.getAllNew); 
+router.delete('/:id', audioController.delete); 
+router.get('/:id', audioController.getById); 
 module.exports = router;
