@@ -78,7 +78,7 @@ exports.delete = async (req, res, next) => {
 exports.favorite = async (req, res, next) => {
   const { audioId } = req.params;
   if (!req.body) {
-    return res.status(400).json({ message: "missing field favorite" });
+    return res.status(400).json({ message: "Missing field favorite in the audio!" });
   }
   try {
     const updatedAudio = await Audio.findByIdAndUpdate(

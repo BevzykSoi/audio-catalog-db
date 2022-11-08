@@ -1,7 +1,7 @@
 const bcrypt = require('bcrypt');
 
 const jwt = require('../utils/jwt');
-const { User } = require('../models');
+const { User, Profile } = require('../models');
 
 exports.register = async (req, res, next) => {
   try {
@@ -26,13 +26,20 @@ exports.register = async (req, res, next) => {
     const payload = {
       _id: user.id,
     };
-
     const token = jwt.generateJwt(payload);
+
+    const newProfile = await Profile.create({
+      user: user._id,
+    });
+
+    user.profile = newProfile._id;
+    await user.save();
 
     res.json({
         "message": "You've been signed up!",
         "token": token,
         user,
+        "user's profile": newProfile,
     });
   } catch (error) {
     next(error);
@@ -62,13 +69,15 @@ exports.login = async (req, res, next) => {
     const payload = {
       _id: user.id,
     };
-
     const token = jwt.generateJwt(payload);
 
+    const profile = await Profile.findById(user.profile);
+
     res.json({
-        "message": "You've been logged in!",
-        "token": token,
-        user,
+      message: "You've been logged in!",
+      token: token,
+      user,
+      "user's profile": profile,
     });
   } catch (error) {
     next(error);
@@ -92,9 +101,12 @@ exports.profile = async (req, res, next) => {
       return;
     }
 
+    const profile = await Profile.findById(req.user.profile);
+
     res.json({
       message: 'You are in your profile!',
       "user": req.user,
+      "user's profile": profile,
     });
   } catch (error) {
     next(error);

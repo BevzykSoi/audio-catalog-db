@@ -19,6 +19,7 @@
     "passport": "^0.6.0",
     "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0",
+    "path": "^0.12.7",
     "swagger-ui-express": "^4.5.0",
     "volleyball": "^1.5.1",
     "yup": "^0.32.11"
