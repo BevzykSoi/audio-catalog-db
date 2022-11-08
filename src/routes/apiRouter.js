@@ -5,7 +5,7 @@ const usersRouter = require('./usersRouter');
 const audiosRouter = require('./audiosRouter');
 const router = express.Router();
 
-router.use('/auth', authRouter);
+router.use('/auth', authRouter);                                                                                                                                                  
 router.use('/users', usersRouter);
-router.use('/audios', audiosRouter);
-module.exports = router;
+router.use('/audios', audiosRouter);                                                                                                                            
+module.exports = router;                                                                                                                                                                                                                                                                                                                                                 

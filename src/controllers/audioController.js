@@ -11,22 +11,28 @@ exports.getAll = async (req, res, next) => {
 
 
 exports.getAllTop = async (req, res, next) => {
+ 
   try {
-    const getAllTop = await Audio.find(usersLiked);
-    res.json(getAllTop);
-  } catch (error) {
+   const allAudiosTOP = await Audio.find().sort({ listenCount: -1 })
+  
+    res.json(allAudiosTOP);}
+    catch (error) {
     next(error);
   }
 };
 
 
 exports.getAllNew = async (req, res, next) => {
-  try {
-    const getAllNew = await Audio.find(create);
-    res.json(getAllNew);
-  } catch (error) {
-    next(error);
-  }
+
+ 
+    try {
+   const allAudiosNEW = await Audio.find().sort({ createdAt: -1, updatedAt: -1 });
+    
+      res.json(allAudiosNEW);}
+      catch (error) {
+      next(error);
+    
+  };
 };
 
 
