@@ -246,34 +246,61 @@ exports.followUser = async (req, res, next) => {
   try {
     const { id } = req.params;
 
-    const userToFollow = await User.findById(id).then((user) => {
-      if (
-        user.followers.filter(
-          (follower) => follower.user.toString() === id
-        ).length > 0
-      ) {
-        return res
-          .status(400)
-          .json({ alreadyFollow: 'You already followed the user!' });
-      }
+    if (id === req.user._id.toString()) {
+      res.status(400).send('You cannot follow yourself!');
+      return;
+    }
 
-      user.followers.unshift({ user: id });
-      user.save();
-      
-      userToFollow
-        .findOne({ email: req.user.email })
-        .then((user) => {
-          user.following.unshift({ user: req.params.user_id });
-          user.save().then((user) => res.json(user));
-        })
-        .catch((err) =>
-          res
-            .status(404)
-            .json({ alreadyFollow: 'You already followed the user!' })
-        );
-    });
+    let userToFollow = await User.findById(id);
 
-    res.json({"user": req.user});
+    const isFollowing = req.user.following.includes(userToFollow.id);
+    if (isFollowing) {
+      userToFollow = await User.findByIdAndUpdate(id, {
+        $pull: {
+          followers: req.user.id,
+        },
+      }, {
+        new: true,
+      });
+
+      req.user = await User.findByIdAndUpdate(
+        req.user._id,
+        {
+          $pull: {
+            following: userToFollow._id,
+          },
+        },
+        {
+          new: true,
+        }
+      );
+    } else {
+      userToFollow = await User.findByIdAndUpdate(
+        id,
+        {
+          $addToSet: {
+            followers: req.user.id,
+          },
+        },
+        {
+          new: true,
+        }
+      );
+
+      req.user = await User.findByIdAndUpdate(
+        req.user._id,
+        {
+          $addToSet: {
+            following: userToFollow._id,
+          },
+        },
+        {
+          new: true,
+        }
+      );
+    }
+
+    res.json(userToFollow);
   } catch (error) {
     next(error);
   }
