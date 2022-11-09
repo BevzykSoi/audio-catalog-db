@@ -35,11 +35,14 @@ exports.register = async (req, res, next) => {
     user.profile = newProfile._id;
     await user.save();
 
+    await user.populate({
+      path: 'profile',
+    });
+
     res.json({
-        "message": "You've been signed up!",
-        "token": token,
-        user,
-        "user's profile": newProfile,
+      message: "You've been signed up!",
+      token: token,
+      user,
     });
   } catch (error) {
     next(error);
@@ -71,13 +74,14 @@ exports.login = async (req, res, next) => {
     };
     const token = jwt.generateJwt(payload);
 
-    const profile = await Profile.findById(user.profile);
+    await user.populate({
+      path: 'profile',
+    });
 
     res.json({
       message: "You've been logged in!",
       token: token,
       user,
-      "user's profile": profile,
     });
   } catch (error) {
     next(error);
@@ -87,7 +91,7 @@ exports.login = async (req, res, next) => {
 exports.logout = async (req, res, next) => {
   try {
     res.json({
-      "message": "You've been logged out!",
+      message: "You've been logged out!",
     });
   } catch (error) {
     next(error);
@@ -101,12 +105,19 @@ exports.profile = async (req, res, next) => {
       return;
     }
 
-    const profile = await Profile.findById(req.user.profile);
+    const payload = {
+      _id: req.user.id,
+    };
+    const token = jwt.generateJwt(payload);
+
+    await req.user.populate({
+      path: 'profile',
+    });
 
     res.json({
       message: 'You are in your profile!',
-      "user": req.user,
-      "user's profile": profile,
+      "token": token,
+      user: req.user,
     });
   } catch (error) {
     next(error);

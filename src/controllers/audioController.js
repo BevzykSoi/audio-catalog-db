@@ -37,9 +37,14 @@ exports.getAllNew = async (req, res, next) => {
 exports.getById = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const audios = await Audio.findById(id);
-    await audios.populate('author');
-    res.json(audios);
+    const audio = await Audio.findById(id);
+
+    if (!audio) {
+      res.status(400).send('Audio did not found!');
+    }
+
+    await audio.populate('author');
+    res.json(audio);
   } catch (error) {
     next(error);
   }
@@ -72,7 +77,7 @@ exports.delete = async (req, res, next) => {
 };
 exports.favorite = async (req, res, next) => {
   const { audioId } = req.params;
-  
+
   try {
     let updatedAudio = await Audio.findById(audioId);
 
@@ -82,7 +87,7 @@ exports.favorite = async (req, res, next) => {
         .json({ message: `Audio with id ${audioId} not found` });
     }
     const audioLiked = updatedAudio.usersLiked.includes(req.user.id);
-  
+
     if (audioLiked) {
       updatedAudio = await Audio.findByIdAndUpdate(
         audioId,
@@ -93,34 +98,37 @@ exports.favorite = async (req, res, next) => {
           new: true,
         }
       );
-      req.user = await User.findByIdAndUpdate(req.user.id,
+      req.user = await User.findByIdAndUpdate(
+        req.user.id,
         {
-          $pull:{likedAudios:updatedAudio.id}
+          $pull: { likedAudios: updatedAudio.id },
         },
         {
-          new:true
-        });
-        
+          new: true,
+        }
+      );
+    } else {
+      updatedAudio = await Audio.findByIdAndUpdate(
+        audioId,
+        {
+          $addToSet: { usersLiked: req.user.id },
+        },
+        {
+          new: true,
+        }
+      );
+      req.user = await User.findByIdAndUpdate(
+        req.user.id,
+        {
+          $addToSet: { likedAudios: updatedAudio.id },
+        },
+        {
+          new: true,
+        }
+      );
     }
-   else{
-    updatedAudio = await Audio.findByIdAndUpdate(
-      audioId,
-      {
-        $addToSet: { usersLiked: req.user.id },
-      },
-      {
-        new: true,
-      }
-    );
-    req.user = await User.findByIdAndUpdate(req.user.id,
-      {
-        $addToSet:{likedAudios:updatedAudio.id}
-      },
-      {
-        new:true
-      });
-   }
     await updatedAudio.populate('author');
+    await updatedAudio.populate('usersLiked');
 
     res.json(updatedAudio);
   } catch (error) {

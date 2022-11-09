@@ -20,6 +20,10 @@ exports.getUser = async (req, res, next) => {
       return;
     }
 
+    await user.populate({
+      path: 'profile',
+    });
+
     res.json({
       user,
     });
@@ -38,7 +42,7 @@ exports.updateUser = async (req, res, next) => {
       return;
     }
 
-    const userProfile = await Profile.findByIdAndUpdate(
+    req.user.profile = await Profile.findByIdAndUpdate(
       req.user.profile.toString(),
       {
         language,
@@ -50,12 +54,14 @@ exports.updateUser = async (req, res, next) => {
       }
     );
 
-    if (!userProfile) {
-      res.status(404).send('User did not found!');
+    if (!req.user.profile) {
+      res.status(404).send('Profile did not found!');
       return;
     }
 
-    res.json(userProfile);
+    await req.user.save();
+
+    res.json(req.user);
   } catch (error) {
     next(error);
   }
@@ -80,7 +86,7 @@ exports.updateUserAvatar = async (req, res, next) => {
     const newAvatar = await cloudinary.uploader.upload(editedImagePath);
     await fs.unlink(req.file.path);
 
-    const userProfile = await Profile.findByIdAndUpdate(
+    req.user.profile = await Profile.findByIdAndUpdate(
       req.user.profile.toString(),
       {
         banner: newAvatar.secure_url,
@@ -90,12 +96,14 @@ exports.updateUserAvatar = async (req, res, next) => {
       }
     );
 
-    if (!userProfile) {
+    if (!req.user.profile) {
       res.status(404).send('Profile did not found!');
       return;
     }
 
-    res.json(userProfile);
+    await req.user.save();
+
+    res.json(req.user);
   } catch (error) {
     next(error);
   }
@@ -116,7 +124,7 @@ exports.updateUserBanner = async (req, res, next) => {
     const newBanner = await cloudinary.uploader.upload(editedImagePath);
     await fs.unlink(req.file.path);
 
-    const userProfile = await Profile.findByIdAndUpdate(
+    req.user.profile = await Profile.findByIdAndUpdate(
       req.user.profile.toString(),
       {
         banner: newBanner.secure_url,
@@ -126,12 +134,14 @@ exports.updateUserBanner = async (req, res, next) => {
       }
     );
 
-    if (!userProfile) {
+    if (!req.user.profile) {
       res.status(404).send('Profile did not found!');
       return;
     }
 
-    res.json(userProfile);
+    await req.user.save();
+
+    res.json(req.user);
   } catch (error) {
     next(error);
   }
@@ -143,12 +153,19 @@ exports.getUserAudios = async (req, res, next) => {
 
     const user = await User.findById(id).populate({
       path: 'createdAudios',
+      populate: {
+        path: 'author',
+      },
     });
 
     if (!user) {
       res.status(404).send('User did not found!');
       return;
     }
+
+    await user.populate({
+      path: 'profile',
+    });
 
     res.json({
       "User's audios": user.createdAudios,
@@ -171,6 +188,10 @@ exports.getUserLikes = async (req, res, next) => {
       return;
     }
 
+    await user.populate({
+      path: 'profile',
+    });
+
     res.json({
       "User's likes": user.likedAudios,
     });
@@ -191,6 +212,10 @@ exports.getUserHistory = async (req, res, next) => {
       res.status(404).send('User did not found!');
       return;
     }
+
+    await user.populate({
+      path: 'profile',
+    });
 
     res.json({
       "User's history": user.history,
@@ -213,6 +238,10 @@ exports.getUserFollowings = async (req, res, next) => {
       return;
     }
 
+    await user.populate({
+      path: 'profile',
+    });
+
     res.json({
       "User's followings": user.following,
     });
@@ -233,6 +262,10 @@ exports.getUserFollowers = async (req, res, next) => {
       res.status(404).send('User did not found!');
       return;
     }
+
+    await user.populate({
+      path: 'profile',
+    });
 
     res.json({
       "User's followers": user.followers,
@@ -255,13 +288,17 @@ exports.followUser = async (req, res, next) => {
 
     const isFollowing = req.user.following.includes(userToFollow.id);
     if (isFollowing) {
-      userToFollow = await User.findByIdAndUpdate(id, {
-        $pull: {
-          followers: req.user.id,
+      userToFollow = await User.findByIdAndUpdate(
+        id,
+        {
+          $pull: {
+            followers: req.user.id,
+          },
         },
-      }, {
-        new: true,
-      });
+        {
+          new: true,
+        }
+      );
 
       req.user = await User.findByIdAndUpdate(
         req.user._id,
@@ -299,6 +336,18 @@ exports.followUser = async (req, res, next) => {
         }
       );
     }
+
+    await userToFollow.populate({
+      path: 'profile',
+    });
+
+    await userToFollow.populate({
+      path: 'following',
+    });
+
+    await userToFollow.populate({
+      path: 'followers',
+    });
 
     res.json(userToFollow);
   } catch (error) {
