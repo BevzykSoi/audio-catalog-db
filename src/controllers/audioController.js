@@ -128,7 +128,6 @@ exports.favorite = async (req, res, next) => {
       );
     }
     await updatedAudio.populate('author');
-    await updatedAudio.populate('usersLiked');
 
     res.json(updatedAudio);
   } catch (error) {

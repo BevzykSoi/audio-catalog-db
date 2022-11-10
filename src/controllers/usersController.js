@@ -24,9 +24,7 @@ exports.getUser = async (req, res, next) => {
       path: 'profile',
     });
 
-    res.json({
-      user,
-    });
+    res.json(user);
   } catch (error) {
     next(error);
   }
@@ -89,7 +87,7 @@ exports.updateUserAvatar = async (req, res, next) => {
     req.user.profile = await Profile.findByIdAndUpdate(
       req.user.profile.toString(),
       {
-        banner: newAvatar.secure_url,
+        avatar: newAvatar.secure_url,
       },
       {
         new: true,

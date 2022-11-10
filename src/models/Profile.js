@@ -8,19 +8,19 @@ const Profile = new Schema(
     },
     language: {
       type: String,
-      enum: ['English', 'Ukrainian'],
-      default: 'English',
+      enum: ['en', 'ua'],
+      default: 'en',
     },
     theme: {
       type: String,
-      enum: ['Light', 'Dark'],
-      default: 'Light',
+      enum: ['light', 'dark'],
+      default: 'light',
     },
     avatarUrl: {
       type: String,
       required: true,
       default:
-        'https://res.cloudinary.com/bevzyksoi/image/upload/v1665503880/defaultAvatar_jifgdp.png',
+        'https://res.cloudinary.com/bevzyksoi/image/upload/v1668016321/sbcf-default-avatar_dykn6i.png',
     },
     banner: String,
     genres: [
