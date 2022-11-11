@@ -87,7 +87,7 @@ exports.updateUserAvatar = async (req, res, next) => {
     req.user.profile = await Profile.findByIdAndUpdate(
       req.user.profile.toString(),
       {
-        avatar: newAvatar.secure_url,
+        avatarUrl: newAvatar.secure_url,
       },
       {
         new: true,
