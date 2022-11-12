@@ -1,9 +1,9 @@
 const { Audio } = require('../models');
 const { User } = require('../models');
+
 exports.getAll = async (req, res, next) => {
   try {
     const allAudios = await Audio.find().populate('author');
-    // await allAudios.populate('author')
     res.json(allAudios);
   } catch (error) {
     next(error);
@@ -15,7 +15,6 @@ exports.getAllTop = async (req, res, next) => {
     const allAudiosTOP = await Audio.find()
       .sort({ listenCount: -1 })
       .populate('author');
-    //  await allAudiosTOP.populate('author')
     res.json(allAudiosTOP);
   } catch (error) {
     next(error);
@@ -27,8 +26,28 @@ exports.getAllNew = async (req, res, next) => {
     const allAudiosNEW = await Audio.find()
       .sort({ createdAt: -1, updatedAt: -1 })
       .populate('author');
-    //  await allAudiosNEW.populate('author')
     res.json(allAudiosNEW);
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.search = async (req, res, next) => {
+  try {
+    const { name } = req.query;
+
+    const audios = await Audio.find(
+      {
+        name: {
+          $regex: name,
+          $options: 'i',
+        },
+      },
+      null,
+      {}
+    ).populate('author');
+
+    res.json(audios);
   } catch (error) {
     next(error);
   }
