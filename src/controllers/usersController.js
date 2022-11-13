@@ -165,9 +165,7 @@ exports.getUserAudios = async (req, res, next) => {
       path: 'profile',
     });
 
-    res.json({
-      "User's audios": user.createdAudios,
-    });
+    res.json(user.createdAudios);
   } catch (error) {
     next(error);
   }
