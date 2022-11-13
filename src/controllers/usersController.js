@@ -190,9 +190,7 @@ exports.getUserLikes = async (req, res, next) => {
       path: 'profile',
     });
 
-    res.json({
-      "User's likes": user.likedAudios,
-    });
+    res.json(user.likedAudios);
   } catch (error) {
     next(error);
   }
@@ -215,9 +213,7 @@ exports.getUserHistory = async (req, res, next) => {
       path: 'profile',
     });
 
-    res.json({
-      "User's history": user.history,
-    });
+    res.json(user.history);
   } catch (error) {
     next(error);
   }
@@ -240,9 +236,7 @@ exports.getUserFollowings = async (req, res, next) => {
       path: 'profile',
     });
 
-    res.json({
-      "User's followings": user.following,
-    });
+    res.json(user.following);
   } catch (error) {
     next(error);
   }
@@ -265,9 +259,7 @@ exports.getUserFollowers = async (req, res, next) => {
       path: 'profile',
     });
 
-    res.json({
-      "User's followers": user.followers,
-    });
+    res.json(user.followers);
   } catch (error) {
     next(error);
   }

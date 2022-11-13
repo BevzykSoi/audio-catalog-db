@@ -1,3 +1,12 @@
 /node_modules
 
 .env
+
+/public/audios/*
+!/public/audios/.gitkeep
+
+/public/avatars/*
+!/public/avatars/.gitkeep
+
+/public/banners/*
+!/public/banners/.gitkeep
