@@ -7,7 +7,7 @@ const fs = require('fs').promises;
 const Jimp = require('jimp');
 const { number } = require('yup');
 const { string } = require('yup/lib/locale');
-const { auth } = require('../middlewares');
+const { auth, historyAuth } = require('../middlewares');
 const audiosPath = path.join(process.cwd(), 'public/audios');
 const audioController = require('../controllers/audioController');
 
@@ -72,5 +72,5 @@ router.patch('/:audioId/like', auth, audioController.favorite);
 router.get('/top', audioController.getAllTop);
 router.get('/new', audioController.getAllNew);
 router.delete('/:id/delete', audioController.delete);
-router.get('/:id', audioController.getById);
+router.get('/:id', historyAuth, audioController.getById);
 module.exports = router;

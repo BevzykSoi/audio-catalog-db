@@ -62,6 +62,22 @@ exports.getById = async (req, res, next) => {
       res.status(400).send('Audio did not found!');
     }
 
+    if (req.user && req.user.profile.saveHistory === true) {
+      await req.user.populate('profile');
+
+      req.user = await User.findByIdAndUpdate(
+        req.user._id,
+        {
+          $push: {
+            history: audio._id,
+          },
+        },
+        {
+          new: true,
+        }
+      );
+    }
+
     await audio.populate('author');
     res.json(audio);
   } catch (error) {
