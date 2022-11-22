@@ -19,11 +19,7 @@ exports.getUser = async (req, res, next) => {
       res.status(404).send('User did not found!');
       return;
     }
-
-    await user.populate({
-      path: 'profile',
-    });
-
+    
     res.json(user);
   } catch (error) {
     next(error);

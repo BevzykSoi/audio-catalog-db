@@ -50,10 +50,12 @@ router.post(
       await fs.unlink(audioPath);
       await fs.unlink(coverPath);
 
-      await req.user.populate('profile');
+      await req.user.populate({
+        path: 'profile',
+      });
 
       req.user.profile = await Profile.findByIdAndUpdate(
-        req.user._id,
+        req.user.profile._id,
         {
           $addToSet: {
             genres: { $each: req.body.genres.split(', ') },

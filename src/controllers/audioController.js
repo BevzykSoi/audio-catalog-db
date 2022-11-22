@@ -1,5 +1,4 @@
-const { Audio } = require('../models');
-const { User } = require('../models');
+const { Audio, Profile, User } = require('../models');
 
 exports.getAll = async (req, res, next) => {
   try {
@@ -62,9 +61,11 @@ exports.getById = async (req, res, next) => {
       res.status(400).send('Audio did not found!');
     }
 
-    if (req.user && req.user.profile.saveHistory === true) {
-      await req.user.populate('profile');
+    await req.user.populate({
+      path: 'profile',
+    });
 
+    if (req.user && req.user.profile.saveHistory === true) {
       req.user = await User.findByIdAndUpdate(
         req.user._id,
         {
@@ -103,9 +104,26 @@ exports.delete = async (req, res, next) => {
   try {
     const { id } = req.params;
 
-    const audio1 = await Audio.findByIdAndDelete(id);
-    await audio1.populate('author');
-    res.json(audio1);
+    const audio = await Audio.findByIdAndDelete(id);
+    await audio.populate('author');
+
+    const user = await User.findByIdAndUpdate(
+      audio.author._id,
+      {
+        $pull: {
+          createdAudios: audio._id,
+          likedAudios: audio._id,
+          history: audio._id,
+        },
+      },
+      {
+        new: false,
+      }
+    ).populate({
+      path: 'profile',
+    });
+
+    res.json(audio, user);
   } catch (error) {
     next(error);
   }
