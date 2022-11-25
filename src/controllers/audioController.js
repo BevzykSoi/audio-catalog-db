@@ -37,7 +37,7 @@ exports.search = async (req, res, next) => {
 
     const audios = await Audio.find(
       {
-        name: {
+        q: {
           $regex: name,
           $options: 'i',
         },

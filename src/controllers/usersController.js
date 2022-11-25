@@ -172,7 +172,7 @@ exports.getUserLikes = async (req, res, next) => {
     const { id } = req.params;
 
     const user = await User.findById(id).populate({
-      path: 'history',
+      path: 'likedAudios',
       populate: {
         path: 'author',
       },
