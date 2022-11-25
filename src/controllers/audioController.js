@@ -33,12 +33,12 @@ exports.getAllNew = async (req, res, next) => {
 
 exports.search = async (req, res, next) => {
   try {
-    const { name } = req.query;
+    const { q } = req.query;
 
     const audios = await Audio.find(
       {
-        q: {
-          $regex: name,
+        name: {
+          $regex: q,
           $options: 'i',
         },
       },
