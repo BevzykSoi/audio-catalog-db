@@ -15,6 +15,7 @@ require('./config/passport');
 
 const app = express();
 const apiRouter = require('./routes/apiRouter');
+const errorHandler = require('./middlewares/errorHandler');
 const staticFolderPath = path.join(process.cwd(), 'public');
 
 cloudinary.config({
@@ -31,5 +32,6 @@ app.use(cors({ origin: '*' }));
 app.use('/docs', swagger.serve, swagger.setup(swaggerApi));
 
 app.use('/api/v1', apiRouter);
+app.use(errorHandler);
 
 module.exports = app;

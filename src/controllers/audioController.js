@@ -184,7 +184,6 @@ exports.favorite = async (req, res, next) => {
 
     res.json(updatedAudio);
   } catch (error) {
-    res.status(500).json({ message: 'Something went wrong, Not found' });
-    console.log(error);
+    next(error);
   }
 };
