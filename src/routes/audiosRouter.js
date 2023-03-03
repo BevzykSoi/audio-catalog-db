@@ -12,6 +12,7 @@ const audiosPath = path.join(process.cwd(), 'public/audios');
 const audioController = require('../controllers/audioController');
 
 const cloudinary = require('cloudinary').v2;
+
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, audiosPath);
@@ -34,8 +35,6 @@ router.post(
   ]),
   async (req, res, next) => {
     try {
-      console.log(req.file);
-
       const audioPath = req.files.audio[0].path;
       const coverPath = req.files.cover[0].path;
 
@@ -43,9 +42,25 @@ router.post(
         resource_type: 'video',
       });
       const coverUploadResponse = await cloudinary.uploader.upload(coverPath);
-      console.log(req.files.audio[0].path);
+
       await fs.unlink(audioPath);
       await fs.unlink(coverPath);
+
+      await req.user.populate({
+        path: 'profile',
+      });
+
+      req.user.profile = await Profile.findByIdAndUpdate(
+        req.user.profile._id,
+        {
+          $addToSet: {
+            genres: { $each: req.body.genres.split(', ') },
+          },
+        },
+        {
+          new: true,
+        }
+      );
 
       const newAudio = await Audio.create({
         name: req.body.name,
@@ -66,9 +81,9 @@ router.post(
   }
 );
 router.get('/', audioController.getAll);
-router.patch('/:audioId/like',auth, audioController.favorite); 
-router.get('/top', audioController.getAllTop); 
-router.get('/new', audioController.getAllNew); 
-router.delete('/:id', audioController.delete); 
-router.get('/:id', audioController.getById); 
+router.patch('/:audioId/like', auth, audioController.favorite);
+router.get('/top', audioController.getAllTop);
+router.get('/new', audioController.getAllNew);
+router.delete('/:id', audioController.delete);
+router.get('/:id', audioController.getById);
 module.exports = router;

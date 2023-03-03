@@ -1,5 +1,57 @@
+<<<<<<< Updated upstream
 const { Audio } = require('../models');
 const { User } = require('../models');
+=======
+const { Audio, Profile, User } = require('../models');
+const cloudinary = require('cloudinary').v2;
+const fs = require('fs').promises;
+exports.create = async (req, res, next) => {
+  try {
+    const audioPath = req.files.audio[0].path;
+    const coverPath = req.files.cover[0].path;
+
+    const audioUploadResponse = await cloudinary.uploader.upload(audioPath, {
+      resource_type: 'video',
+    });
+    const coverUploadResponse = await cloudinary.uploader.upload(coverPath);
+
+    await fs.unlink(audioPath);
+    await fs.unlink(coverPath);
+
+    await req.user.populate({
+      path: 'profile',
+    });
+
+    req.user.profile = await Profile.findByIdAndUpdate(
+      req.user.profile._id,
+      {
+        $addToSet: {
+          genres: { $each: req.body.genres.split(', ') },
+        },
+      },
+      {
+        new: true,
+      }
+    );
+
+    const newAudio = await Audio.create({
+      name: req.body.name,
+      genres: req.body.genres.split(', '),
+      author: req.user._id,
+      duration: req.body.duration,
+      fileUrl: audioUploadResponse.secure_url,
+      coverUrl: coverUploadResponse.secure_url,
+    });
+    req.user.createdAudios.push(newAudio._id);
+    await req.user.save();
+    await newAudio.populate('author');
+
+    res.json(newAudio);
+  } catch (error) {
+    next(error);
+  }
+};
+>>>>>>> Stashed changes
 exports.getAll = async (req, res, next) => {
   try {
     const allAudios = await Audio.find().populate('author');
