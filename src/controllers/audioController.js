@@ -1,4 +1,4 @@
-const { Audio, Profile, User } = require('../models');
+const { Audio, Profile, User, Comment } = require('../models');
 const cloudinary = require('cloudinary').v2;
 const fs = require('fs').promises;
 
@@ -177,6 +177,7 @@ exports.delete = async (req, res, next) => {
     next(error);
   }
 };
+
 exports.favorite = async (req, res, next) => {
   const { audioId } = req.params;
 
@@ -232,6 +233,30 @@ exports.favorite = async (req, res, next) => {
     await updatedAudio.populate('author');
 
     res.json(updatedAudio);
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.getAllComments = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+
+    const audio = await Audio.findById(id);
+
+    if (!audio) {
+      res.status(400).send('Audio did not found!');
+    }
+
+    const comments = await Comment.find(audio._id);
+
+    for await (const comment of comments) {
+      await comment.populate({
+        path: 'owner'
+      });
+    };
+    
+    res.status(200).json(comments);
   } catch (error) {
     next(error);
   }

@@ -90,4 +90,5 @@ router.get('/top', audioController.getAllTop);
 router.get('/new', audioController.getAllNew);
 router.delete('/:id/delete', audioController.delete);
 router.get('/:id', historyAuth, audioController.getById);
+router.get('/:id/comments', audioController.getAllComments);
 module.exports = router;
