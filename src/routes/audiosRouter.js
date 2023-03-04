@@ -6,7 +6,6 @@ const { Audio, Profile } = require('../models');
 
 const multer = require('multer');
 const fs = require('fs').promises;
-const Jimp = require('jimp');
 
 const { auth, historyAuth } = require('../middlewares');
 
@@ -36,7 +35,6 @@ router.post(
     { name: 'cover', maxCount: 1 },
   ]),
   async (req, res, next) => {
-    console.log('Process!');
     try {
       const audioPath = req.files.audio[0].path;
       const coverPath = req.files.cover[0].path;

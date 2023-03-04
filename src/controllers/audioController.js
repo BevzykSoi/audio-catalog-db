@@ -1,4 +1,4 @@
-const { Audio, Profile, User } = require('../models');
+const { Audio, User } = require('../models');
 
 exports.getAll = async (req, res, next) => {
   try {
