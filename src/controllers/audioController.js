@@ -1,10 +1,7 @@
-<<<<<<< Updated upstream
-const { Audio } = require('../models');
-const { User } = require('../models');
-=======
 const { Audio, Profile, User } = require('../models');
 const cloudinary = require('cloudinary').v2;
 const fs = require('fs').promises;
+
 exports.create = async (req, res, next) => {
   try {
     const audioPath = req.files.audio[0].path;
@@ -51,8 +48,6 @@ exports.create = async (req, res, next) => {
     next(error);
   }
 };
->>>>>>> Stashed changes
-const { Audio, User } = require('../models');
 
 exports.getAll = async (req, res, next) => {
   try {
