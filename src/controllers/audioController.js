@@ -1,4 +1,4 @@
-const { Audio, Profile, User, Comment } = require('../models');
+const { Audio, Profile, User, Comment, Playlist } = require('../models');
 const cloudinary = require('cloudinary').v2;
 const fs = require('fs').promises;
 
@@ -252,11 +252,81 @@ exports.getAllComments = async (req, res, next) => {
 
     for await (const comment of comments) {
       await comment.populate({
-        path: 'owner'
+        path: 'owner',
       });
-    };
-    
+    }
+
     res.status(200).json(comments);
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.addToPlaylist = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+
+    const audio = await Audio.findById(id);
+
+    if (!audio) {
+      res.status(400).send('Audio not found!');
+      return;
+    }
+
+    const playlist = await Playlist.findByIdAndUpdate(
+      id,
+      {
+        audios: {
+          $push: {
+            audio,
+          },
+        },
+      },
+      {
+        new: true,
+      }
+    );
+
+    await playlist.populate({
+      path: 'audios',
+    });
+
+    res.status(200).json(playlist);
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.removeFromPlaylist = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+
+    const audio = await Audio.findById(id);
+
+    if (!audio) {
+      res.status(400).send('Audio not found!');
+      return;
+    }
+
+    const playlist = await Playlist.findByIdAndUpdate(
+      id,
+      {
+        audios: {
+          $pull: {
+            audio,
+          },
+        },
+      },
+      {
+        new: true,
+      }
+    );
+
+    await playlist.populate({
+      path: 'audios',
+    });
+
+    res.status(200).json(playlist);
   } catch (error) {
     next(error);
   }
