@@ -8,7 +8,7 @@ module.exports = (req, res, next) => {
     },
     (error, user) => {
       if (error || !user) {
-        res.status(401).send('Unauthorized');
+        res.status(401).send('Unauthorized!');
         return;
       }
 

@@ -3,4 +3,5 @@ module.exports = {
   Profile: require('./Profile'),
   Audio: require('./Audio'),
   Playlist: require('./Playlist'),
+  Comment: require('./Comment'),
 };

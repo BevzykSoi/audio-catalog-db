@@ -8,7 +8,7 @@ module.exports = (req, res, next) => {
     },
     (error, user) => {
       if (!user) {
-        next();
+        res.status(401).send('Unathourized!');
         return;
       }
 

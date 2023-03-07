@@ -6,9 +6,6 @@ const { Audio, Profile } = require('../models');
 
 const multer = require('multer');
 const fs = require('fs').promises;
-const Jimp = require('jimp');
-const { number } = require('yup');
-const { string } = require('yup/lib/locale');
 
 const { auth, historyAuth } = require('../middlewares');
 
@@ -80,6 +77,7 @@ router.post(
 
       res.json(newAudio);
     } catch (error) {
+      next(error);
       console.log(error);
     }
   }
@@ -88,8 +86,11 @@ router.post(
 router.get('/', audioController.getAll);
 router.get('/search', audioController.search);
 router.patch('/:audioId/like', auth, audioController.favorite);
+router.patch('/:audioId/playlist/add', auth, audioController.addToPlaylist);
+router.patch('/:audioId/playlist/remove', auth, audioController.removeFromPlaylist);
 router.get('/top', audioController.getAllTop);
 router.get('/new', audioController.getAllNew);
 router.delete('/:id/delete', audioController.delete);
 router.get('/:id', historyAuth, audioController.getById);
+router.get('/:id/comments', audioController.getAllComments);
 module.exports = router;
