@@ -21,17 +21,9 @@ exports.create = async (req, res, next) => {
 
 exports.getAll = async (req, res, next) => {
   try {
-    const playlists = await Playlist.find();
-
-    for await (const playlist of playlists) {
-      await playlist.populate({
-        path: 'owner',
-      });
-
-      await playlist.populate({
-        path: 'audios',
-      });
-    }
+    const playlists = await Playlist.find()
+      .populate('owner')
+      .populate('audios');
 
     res.status(200).json(playlists);
   } catch (error) {

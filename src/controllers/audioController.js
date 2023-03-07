@@ -248,13 +248,7 @@ exports.getAllComments = async (req, res, next) => {
       res.status(400).send('Audio did not found!');
     }
 
-    const comments = await Comment.find(audio._id);
-
-    for await (const comment of comments) {
-      await comment.populate({
-        path: 'owner',
-      });
-    }
+    const comments = await Comment.find(audio._id).populate('owner');
 
     res.status(200).json(comments);
   } catch (error) {
@@ -264,9 +258,10 @@ exports.getAllComments = async (req, res, next) => {
 
 exports.addToPlaylist = async (req, res, next) => {
   try {
-    const { id } = req.params;
+    const { audioId } = req.params;
+    const { playlistId } = req.body;
 
-    const audio = await Audio.findById(id);
+    const audio = await Audio.findById(audioId);
 
     if (!audio) {
       res.status(400).send('Audio not found!');
@@ -274,12 +269,10 @@ exports.addToPlaylist = async (req, res, next) => {
     }
 
     const playlist = await Playlist.findByIdAndUpdate(
-      id,
+      playlistId,
       {
-        audios: {
-          $push: {
-            audio,
-          },
+        $push: {
+          audios: audio._id
         },
       },
       {
@@ -299,9 +292,10 @@ exports.addToPlaylist = async (req, res, next) => {
 
 exports.removeFromPlaylist = async (req, res, next) => {
   try {
-    const { id } = req.params;
+    const { audioId } = req.params;
+    const { playlistId } = req.body;
 
-    const audio = await Audio.findById(id);
+    const audio = await Audio.findById(audioId);
 
     if (!audio) {
       res.status(400).send('Audio not found!');
@@ -309,12 +303,10 @@ exports.removeFromPlaylist = async (req, res, next) => {
     }
 
     const playlist = await Playlist.findByIdAndUpdate(
-      id,
+      playlistId,
       {
-        audios: {
-          $pull: {
-            audio,
-          },
+        $pull: {
+          audios: audio._id,
         },
       },
       {
