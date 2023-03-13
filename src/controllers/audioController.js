@@ -272,7 +272,10 @@ exports.addToPlaylist = async (req, res, next) => {
       playlistId,
       {
         $push: {
-          audios: audio._id
+          audios: audio._id,
+        },
+        $addToSet: {
+          genres: audio.genres,
         },
       },
       {
@@ -302,17 +305,47 @@ exports.removeFromPlaylist = async (req, res, next) => {
       return;
     }
 
-    const playlist = await Playlist.findByIdAndUpdate(
-      playlistId,
-      {
+    let playlist = await Playlist.findById(playlistId);
+
+    deletedGenres = [];
+
+    if (playlist.audios.length >= 2) {
+      playlist = await Playlist.findByIdAndUpdate(playlistId, {
         $pull: {
           audios: audio._id,
+          genres: deletedGenres,
         },
-      },
-      {
-        new: true,
-      }
-    );
+      });
+
+      playlist.audios.map((playlistAudio) => {
+        audio.genres.map((genre) => {
+          playlistAudio.genres.map((playlistGenre) => {
+            if (genre === playlistGenre) {
+              if (deletedGenres.includes(genre)) {
+                deletedGenres.pull(genre);
+              } else {
+                next();
+              }
+            } else {
+              deletedGenres.push(genre);
+            }
+          });
+        });
+      });
+    } else {
+      playlist = await Playlist.findByIdAndUpdate(
+        playlistId,
+        {
+          $pull: {
+            audios: audio._id,
+            genres: audio.genres,
+          },
+        },
+        {
+          new: true,
+        }
+      );
+    }
 
     await playlist.populate({
       path: 'audios',
