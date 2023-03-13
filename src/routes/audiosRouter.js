@@ -2,17 +2,12 @@ const express = require('express');
 const path = require('path');
 const router = express.Router();
 
-const { Audio, Profile } = require('../models');
-
 const multer = require('multer');
-const fs = require('fs').promises;
 
 const { auth, historyAuth } = require('../middlewares');
 
 const audiosPath = path.join(process.cwd(), 'public/audios');
 const audioController = require('../controllers/audioController');
-
-const cloudinary = require('cloudinary').v2;
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
