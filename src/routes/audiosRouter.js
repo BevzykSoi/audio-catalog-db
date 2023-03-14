@@ -14,6 +14,7 @@ const { auth, historyAuth } = require('../middlewares');
 
 const audiosPath = path.join(process.cwd(), 'public/audios');
 const audioController = require('../controllers/audioController');
+const paginationMiddleware = require('../middlewares/paginationmidd');
 
 const cloudinary = require('cloudinary').v2;
 
