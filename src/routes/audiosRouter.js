@@ -7,8 +7,8 @@ const { Audio, Profile } = require('../models');
 const multer = require('multer');
 const fs = require('fs').promises;
 
-const { auth, historyAuth } = require('../middlewares');
-
+const { auth, historyAuth, schemaValidate } = require('../middlewares');
+const audioValidator = require('../validationSchemas/auth.validator');
 const audiosPath = path.join(process.cwd(), 'public/audios');
 const audioController = require('../controllers/audioController');
 
@@ -29,7 +29,9 @@ const upload = multer({
 });
 router.post(
   '/',
+  schemaValidate(audioValidator.create),
   auth,
+
   upload.fields([
     { name: 'audio', maxCount: 1 },
     { name: 'cover', maxCount: 1 },
