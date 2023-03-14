@@ -30,7 +30,7 @@ exports.getAll = async (req, res, next) => {
     const audiosCount = await Audio.count(searchFilter);
 
     res.json({
-      items: allAudios,
+      items: audios,
       itemsCount: audiosCount,
       page,
       perPage,
