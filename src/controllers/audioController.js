@@ -2,7 +2,7 @@ const { Audio, Profile, User } = require('../models');
 
 exports.getAll = async (req, res, next) => {
   try {
-    let { q="", page, perPage } = req.query;
+    let { q = '', page, perPage } = req.query;
 
     const searchFilter = {
       name: {
@@ -111,7 +111,7 @@ exports.getAllNew = async (req, res, next) => {
 
 exports.search = async (req, res, next) => {
   try {
-    let { q="", page, perPage } = req.query;
+    let { q = '', page, perPage } = req.query;
     const searchFilter = {
       name: {
         $regex: q,
@@ -220,7 +220,7 @@ exports.delete = async (req, res, next) => {
       path: 'profile',
     });
 
-    res.json(audio, user);
+    res.json(user);
   } catch (error) {
     next(error);
   }
