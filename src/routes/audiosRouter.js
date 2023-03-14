@@ -41,7 +41,11 @@ router.get('/', audioController.getAll);
 router.get('/search', audioController.search);
 router.patch('/:audioId/like', auth, audioController.favorite);
 router.patch('/:audioId/playlist/add', auth, audioController.addToPlaylist);
-router.patch('/:audioId/playlist/remove', auth, audioController.removeFromPlaylist);
+router.patch(
+  '/:audioId/playlist/remove',
+  auth,
+  audioController.removeFromPlaylist
+);
 router.get('/top', audioController.getAllTop);
 router.get('/new', audioController.getAllNew);
 router.delete('/:id/delete', audioController.delete);
