@@ -310,19 +310,13 @@ exports.removeFromPlaylist = async (req, res, next) => {
     deletedGenres = [];
 
     if (playlist.audios.length >= 2) {
-      playlist = await Playlist.findByIdAndUpdate(playlistId, {
-        $pull: {
-          audios: audio._id,
-          genres: deletedGenres,
-        },
-      });
-
       playlist.audios.map((playlistAudio) => {
         audio.genres.map((genre) => {
           playlistAudio.genres.map((playlistGenre) => {
             if (genre === playlistGenre) {
               if (deletedGenres.includes(genre)) {
-                deletedGenres.pull(genre);
+                deletedGenres.pop(genre);
+                console.log(deletedGenres);
               } else {
                 next();
               }
@@ -331,6 +325,13 @@ exports.removeFromPlaylist = async (req, res, next) => {
             }
           });
         });
+      });
+
+      playlist = await Playlist.findByIdAndUpdate(playlistId, {
+        $pull: {
+          audios: audio._id,
+          genres: deletedGenres,
+        },
       });
     } else {
       playlist = await Playlist.findByIdAndUpdate(
