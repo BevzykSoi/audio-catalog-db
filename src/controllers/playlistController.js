@@ -103,7 +103,7 @@ exports.delete = async (req, res, next) => {
 
     const playlist = await Playlist.findById(id);
 
-    if (playlist.owner._id !== req.user._id) {
+    if (playlist.owner._id.valueOf() !== req.user._id.valueOf()) {
       res.status(400).send("You're not the owner of this playlist!");
       return;
     };

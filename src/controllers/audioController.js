@@ -298,48 +298,56 @@ exports.removeFromPlaylist = async (req, res, next) => {
     const { audioId } = req.params;
     const { playlistId } = req.body;
 
-    const audio = await Audio.findById(audioId);
+    const audio = await Audio.findById(audioId).populate('genres');
 
     if (!audio) {
       res.status(400).send('Audio not found!');
       return;
     }
 
-    let playlist = await Playlist.findById(playlistId);
+    let playlist = await Playlist.findById(playlistId)
+      .populate({
+        path: 'audios',
+        populate: {
+          path: 'genres',
+        },
+      })
+      .populate('genres');
 
-    deletedGenres = [];
+    let deletedGenres = [];
 
     if (playlist.audios.length >= 2) {
-      playlist.audios.map((playlistAudio) => {
-        audio.genres.map((genre) => {
-          playlistAudio.genres.map((playlistGenre) => {
-            if (genre === playlistGenre) {
-              if (deletedGenres.includes(genre)) {
-                deletedGenres.pop(genre);
-                console.log(deletedGenres);
-              } else {
-                next();
-              }
-            } else {
-              deletedGenres.push(genre);
-            }
-          });
-        });
-      });
+      const otherAudioGenres = playlist.audios
+        .filter((a) => a._id.valueOf() !== audioId)
+        .flatMap((a) => a.genres);
 
-      playlist = await Playlist.findByIdAndUpdate(playlistId, {
-        $pull: {
-          audios: audio._id,
-          genres: deletedGenres,
+      deletedGenres = audio.genres.filter(
+        (genre) => !otherAudioGenres.some((og) => og === genre)
+      );
+
+      playlist = await Playlist.findByIdAndUpdate(
+        playlistId,
+        {
+          $pull: {
+            audios: audio._id,
+            genres: {
+              $in: deletedGenres,
+            },
+          },
         },
-      });
+        {
+          new: true,
+        }
+      );
     } else {
       playlist = await Playlist.findByIdAndUpdate(
         playlistId,
         {
           $pull: {
             audios: audio._id,
-            genres: audio.genres,
+            genres: {
+              $in: audio.genres,
+            },
           },
         },
         {
@@ -347,10 +355,6 @@ exports.removeFromPlaylist = async (req, res, next) => {
         }
       );
     }
-
-    await playlist.populate({
-      path: 'audios',
-    });
 
     res.status(200).json(playlist);
   } catch (error) {
