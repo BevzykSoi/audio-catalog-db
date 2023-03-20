@@ -457,3 +457,24 @@ exports.followUser = async (req, res, next) => {
     next(error);
   }
 };
+
+exports.deleteUser = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const user = await User.findByIdAndDelete(id);
+
+    if (!user) {
+      res.status(404).send('Not found!');
+      return;
+    }
+    if (id !== req.user._id.toString()) {
+      res.status(401).send('Not authorized!');
+      return;
+    }
+    res.json({
+      message: `User successfully deleted`,
+    });
+  } catch (error) {
+    next(error);
+  }
+};

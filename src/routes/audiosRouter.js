@@ -4,8 +4,8 @@ const router = express.Router();
 
 const multer = require('multer');
 
-const { auth, historyAuth } = require('../middlewares');
-
+const { auth, historyAuth, schemaValidate } = require('../middlewares');
+const audioValidator = require('../validationSchemas/auth.validator');
 const audiosPath = path.join(process.cwd(), 'public/audios');
 const audioController = require('../controllers/audioController');
 const paginationMiddleware = require('../middlewares/paginationmidd');
@@ -25,7 +25,9 @@ const upload = multer({
 });
 router.post(
   '/',
+  schemaValidate(audioValidator.create),
   auth,
+
   upload.fields([
     { name: 'audio', maxCount: 1 },
     { name: 'cover', maxCount: 1 },
@@ -37,7 +39,11 @@ router.get('/', audioController.getAll);
 router.get('/search', audioController.search);
 router.patch('/:audioId/like', auth, audioController.favorite);
 router.patch('/:audioId/playlist/add', auth, audioController.addToPlaylist);
-router.patch('/:audioId/playlist/remove', auth, audioController.removeFromPlaylist);
+router.patch(
+  '/:audioId/playlist/remove',
+  auth,
+  audioController.removeFromPlaylist
+);
 router.get('/top', audioController.getAllTop);
 router.get('/new', audioController.getAllNew);
 router.delete('/:id', audioController.delete);
