@@ -1,4 +1,4 @@
-const { User, Profile } = require('../models');
+const { User, Profile, Audio } = require('../models');
 const fs = require('fs').promises;
 const Jimp = require('jimp');
 const cloudinary = require('cloudinary').v2;
@@ -19,7 +19,7 @@ exports.getUser = async (req, res, next) => {
       res.status(404).send('User did not found!');
       return;
     }
-    
+
     res.json(user);
   } catch (error) {
     next(error);
@@ -144,7 +144,6 @@ exports.updateUserBanner = async (req, res, next) => {
 exports.getUserAudios = async (req, res, next) => {
   try {
     const { id } = req.params;
-
     const user = await User.findById(id).populate({
       path: 'createdAudios',
       populate: {
@@ -152,16 +151,41 @@ exports.getUserAudios = async (req, res, next) => {
       },
     });
 
+    let { page, perPage } = req.query;
+    const searchFilter = {
+      author: id,
+    };
+
+    if (!page) {
+      page = 1;
+    } else {
+      page = +page;
+    }
+    if (!perPage) {
+      perPage = 12;
+    } else {
+      perPage = +perPage;
+    }
+
     if (!user) {
       res.status(404).send('User did not found!');
       return;
     }
 
-    await user.populate({
-      path: 'profile',
-    });
+    const audios = await Audio.find(searchFilter, null, {
+      limit: perPage,
+      skip: (page - 1) * perPage,
+    }).populate('author');
 
-    res.json(user.createdAudios);
+    const audiosCount = await Audio.count(searchFilter);
+
+    res.json({
+      items: audios,
+      itemsCount: audiosCount,
+      page,
+      perPage,
+      pagesCount: Math.ceil(audiosCount / perPage),
+    });
   } catch (error) {
     next(error);
   }
@@ -182,12 +206,41 @@ exports.getUserLikes = async (req, res, next) => {
       res.status(404).send('User did not found!');
       return;
     }
+    let { page, perPage } = req.query;
+    const searchFilter = {
+      author: id,
+    };
 
-    await user.populate({
-      path: 'profile',
+    if (!page) {
+      page = 1;
+    } else {
+      page = +page;
+    }
+    if (!perPage) {
+      perPage = 12;
+    } else {
+      perPage = +perPage;
+    }
+
+    if (!user) {
+      res.status(404).send('User did not found!');
+      return;
+    }
+
+    const audios = await Audio.find(searchFilter, null, {
+      limit: perPage,
+      skip: (page - 1) * perPage,
+    }).populate('author');
+
+    const audiosCount = await Audio.count(searchFilter);
+
+    res.json({
+      items: audios,
+      itemsCount: audiosCount,
+      page,
+      perPage,
+      pagesCount: Math.ceil(audiosCount / perPage),
     });
-
-    res.json(user.likedAudios);
   } catch (error) {
     next(error);
   }
@@ -209,11 +262,41 @@ exports.getUserHistory = async (req, res, next) => {
       return;
     }
 
-    await user.populate({
-      path: 'profile',
-    });
+    let { page, perPage } = req.query;
+    const searchFilter = {
+      author: id,
+    };
 
-    res.json(user.history);
+    if (!page) {
+      page = 1;
+    } else {
+      page = +page;
+    }
+    if (!perPage) {
+      perPage = 12;
+    } else {
+      perPage = +perPage;
+    }
+
+    if (!user) {
+      res.status(404).send('User did not found!');
+      return;
+    }
+
+    const audios = await Audio.find(searchFilter, null, {
+      limit: perPage,
+      skip: (page - 1) * perPage,
+    }).populate('author');
+
+    const audiosCount = await Audio.count(searchFilter);
+
+    res.json({
+      items: audios,
+      itemsCount: audiosCount,
+      page,
+      perPage,
+      pagesCount: Math.ceil(audiosCount / perPage),
+    });
   } catch (error) {
     next(error);
   }
@@ -255,11 +338,41 @@ exports.getUserFollowers = async (req, res, next) => {
       return;
     }
 
-    await user.populate({
-      path: 'profile',
-    });
+    let { page, perPage } = req.query;
+    const searchFilter = {
+      author: id,
+    };
 
-    res.json(user.followers);
+    if (!page) {
+      page = 1;
+    } else {
+      page = +page;
+    }
+    if (!perPage) {
+      perPage = 12;
+    } else {
+      perPage = +perPage;
+    }
+
+    if (!user) {
+      res.status(404).send('User did not found!');
+      return;
+    }
+
+    const audios = await Audio.find(searchFilter, null, {
+      limit: perPage,
+      skip: (page - 1) * perPage,
+    }).populate('author');
+
+    const audiosCount = await Audio.count(searchFilter);
+
+    res.json({
+      items: audios,
+      itemsCount: audiosCount,
+      page,
+      perPage,
+      pagesCount: Math.ceil(audiosCount / perPage),
+    });
   } catch (error) {
     next(error);
   }
@@ -340,6 +453,27 @@ exports.followUser = async (req, res, next) => {
     });
 
     res.json(userToFollow);
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.deleteUser = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const user = await User.findByIdAndDelete(id);
+
+    if (!user) {
+      res.status(404).send('Not found!');
+      return;
+    }
+    if (id !== req.user._id.toString()) {
+      res.status(401).send('Not authorized!');
+      return;
+    }
+    res.json({
+      message: `User successfully deleted`,
+    });
   } catch (error) {
     next(error);
   }

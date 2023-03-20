@@ -24,5 +24,6 @@ router.get('/:id/history', usersController.getUserHistory);
 router.get('/:id/following', usersController.getUserFollowings);
 router.get('/:id/followers', usersController.getUserFollowers);
 router.patch('/:id/follow', auth, usersController.followUser);
+router.delete('/:id', auth, usersController.deleteUser);
 
 module.exports = router;

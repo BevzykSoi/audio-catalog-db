@@ -61,7 +61,14 @@ exports.update = async (req, res, next) => {
     const { id } = req.params;
     const { name } = req.params;
 
-    const playlist = await Playlist.findByIdAndUpdate(
+    const playlist = await Playlist.findById(id);
+
+    if (playlist.owner._id !== req.user._id) {
+      res.status(400).send("You're not the owner of this playlist!");
+      return;
+    }
+
+    const updatedPlaylist = await Playlist.findByIdAndUpdate(
       id,
       {
         name,
@@ -71,20 +78,20 @@ exports.update = async (req, res, next) => {
       }
     );
 
-    if (!playlist) {
+    if (!updatedPlaylist) {
       res.status(400).send('Playlist not found!');
       return;
     }
 
-    await playlist.populate({
+    await updatedPlaylist.populate({
       path: 'audios',
     });
 
-    await playlist.populate({
+    await updatedPlaylist.populate({
       path: 'owner',
     });
 
-    res.status(200).json(playlist);
+    res.status(200).json(updatedPlaylist);
   } catch (error) {
     next(error);
   }
@@ -94,24 +101,31 @@ exports.delete = async (req, res, next) => {
   try {
     const { id } = req.params;
 
-    const playlist = await Playlist.findByIdAndDelete(id);
+    const playlist = await Playlist.findById(id);
 
-    if (!playlist) {
+    if (playlist.owner._id.valueOf() !== req.user._id.valueOf()) {
+      res.status(400).send("You're not the owner of this playlist!");
+      return;
+    };
+
+    const deletedPlaylist = await Playlist.findByIdAndDelete(id);
+
+    if (!deletedPlaylist) {
       res.status(400).send('Playlist not found!');
       return;
     }
 
-    await playlist.populate({
+    await deletedPlaylist.populate({
       path: 'audios',
     });
 
-    await playlist.populate({
+    await deletedPlaylist.populate({
       path: 'owner',
     });
 
     res.status(200).json({
       message: 'Playlist succesfully deleted!',
-      playlist,
+      deletedPlaylist,
     });
   } catch (error) {
     next(error);

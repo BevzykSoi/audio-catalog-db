@@ -5,8 +5,6 @@ const cors = require('cors');
 const swagger = require('swagger-ui-express');
 const swaggerApi = require('./api.json');
 const path = require('path');
-const fs = require('fs').promises;
-const Jimp = require('jimp');
 const cloudinary = require('cloudinary').v2;
 
 require('dotenv').config();
