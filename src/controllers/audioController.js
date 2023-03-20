@@ -51,8 +51,40 @@ exports.create = async (req, res, next) => {
 
 exports.getAll = async (req, res, next) => {
   try {
-    const allAudios = await Audio.find().populate('author');
-    res.json(allAudios);
+    let { q = '', page, perPage } = req.query;
+
+    const searchFilter = {
+      name: {
+        $regex: q,
+        $options: 'i',
+      },
+    };
+
+    if (!page) {
+      page = 1;
+    } else {
+      page = +page;
+    }
+    if (!perPage) {
+      perPage = 12;
+    } else {
+      perPage = +perPage;
+    }
+
+    const allAudios = await Audio.find(searchFilter, null, {
+      limit: perPage,
+      skip: (page - 1) * perPage,
+    }).populate('author');
+
+    const audiosCount = await Audio.count(searchFilter);
+
+    res.json({
+      items: audios,
+      itemsCount: audiosCount,
+      page,
+      perPage,
+      pagesCount: Math.ceil(audiosCount / perPage),
+    });
   } catch (error) {
     next(error);
   }
@@ -60,10 +92,33 @@ exports.getAll = async (req, res, next) => {
 
 exports.getAllTop = async (req, res, next) => {
   try {
-    const allAudiosTOP = await Audio.find()
+    let { page, perPage } = req.query;
+
+    if (!page) {
+      page = 1;
+    } else {
+      page = +page;
+    }
+
+    if (!perPage) {
+      perPage = 12;
+    } else {
+      perPage = +perPage;
+    }
+    const allAudiosTOP = await Audio.find(null, null, {
+      limit: perPage,
+      skip: (page - 1) * perPage,
+    })
       .sort({ listenCount: -1 })
       .populate('author');
-    res.json(allAudiosTOP);
+    const audiosCount = await Audio.count();
+    res.json({
+      items: allAudiosTOP,
+      itemsCount: audiosCount,
+      page,
+      perPage,
+      pagesCount: Math.ceil(audiosCount / perPage),
+    });
   } catch (error) {
     next(error);
   }
@@ -71,10 +126,33 @@ exports.getAllTop = async (req, res, next) => {
 
 exports.getAllNew = async (req, res, next) => {
   try {
-    const allAudiosNEW = await Audio.find()
+    let { page, perPage } = req.query;
+
+    if (!page) {
+      page = 1;
+    } else {
+      page = +page;
+    }
+    if (!perPage) {
+      perPage = 12;
+    } else {
+      perPage = +perPage;
+    }
+
+    const allAudiosNEW = await Audio.find(null, null, {
+      limit: perPage,
+      skip: (page - 1) * perPage,
+    })
       .sort({ createdAt: -1, updatedAt: -1 })
       .populate('author');
-    res.json(allAudiosNEW);
+    const audiosCount = await Audio.count();
+    res.json({
+      items: allAudiosNEW,
+      itemsCount: audiosCount,
+      page,
+      perPage,
+      pagesCount: Math.ceil(actorsCount / perPage),
+    });
   } catch (error) {
     next(error);
   }
@@ -82,20 +160,39 @@ exports.getAllNew = async (req, res, next) => {
 
 exports.search = async (req, res, next) => {
   try {
-    const { q } = req.query;
-
-    const audios = await Audio.find(
-      {
-        name: {
-          $regex: q,
-          $options: 'i',
-        },
+    let { q = '', page, perPage } = req.query;
+    const searchFilter = {
+      name: {
+        $regex: q,
+        $options: 'i',
       },
-      null,
-      {}
-    ).populate('author');
+    };
+    if (!page) {
+      page = 1;
+    } else {
+      page = +page;
+    }
 
-    res.json(audios);
+    if (!perPage) {
+      perPage = 12;
+    } else {
+      perPage = +perPage;
+    }
+
+    const audios = await Audio.find(searchFilter, null, {
+      limit: perPage,
+      skip: (page - 1) * perPage,
+    }).populate('author');
+
+    const audiosCount = await Audio.count(searchFilter);
+
+    res.json({
+      items: audios,
+      itemsCount: audiosCount,
+      page,
+      perPage,
+      pagesCount: Math.ceil(audiosCount / perPage),
+    });
   } catch (error) {
     next(error);
   }
@@ -172,7 +269,7 @@ exports.delete = async (req, res, next) => {
       path: 'profile',
     });
 
-    res.json(audio, user);
+    res.json(user);
   } catch (error) {
     next(error);
   }

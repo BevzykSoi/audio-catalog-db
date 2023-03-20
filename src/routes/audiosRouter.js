@@ -8,6 +8,7 @@ const { auth, historyAuth } = require('../middlewares');
 
 const audiosPath = path.join(process.cwd(), 'public/audios');
 const audioController = require('../controllers/audioController');
+const paginationMiddleware = require('../middlewares/paginationmidd');
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -39,7 +40,7 @@ router.patch('/:audioId/playlist/add', auth, audioController.addToPlaylist);
 router.patch('/:audioId/playlist/remove', auth, audioController.removeFromPlaylist);
 router.get('/top', audioController.getAllTop);
 router.get('/new', audioController.getAllNew);
-router.delete('/:id/delete', audioController.delete);
+router.delete('/:id', audioController.delete);
 router.get('/:id', historyAuth, audioController.getById);
 router.get('/:id/comments', audioController.getAllComments);
 module.exports = router;
