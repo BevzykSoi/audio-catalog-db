@@ -16,6 +16,34 @@ const apiRouter = require('./routes/apiRouter');
 const errorHandler = require('./middlewares/errorHandler');
 const staticFolderPath = path.join(process.cwd(), 'public');
 
+const authApi = require('./docs/auth.json');
+const audiosApi = require('./docs/audios.json');
+const usersApi = require('./docs/users.json');
+const playlistsApi = require('./docs/playlists.json');
+const commentsApi = require('./docs/comments.json');
+
+const userSchemaApi = require('./docs/schemas/User.json');
+const profileSchemaApi = require('./docs/schemas/Profile.json');
+const audioSchemaApi = require('./docs/schemas/Audio.json');
+const playlistSchemaApi = require('./docs/schemas/Playlist.json');
+const commentSchemaApi = require('./docs/schemas/Comment.json');
+
+swaggerApi.paths = {
+  ...authApi,
+  ...audiosApi,
+  ...usersApi,
+  ...playlistsApi,
+  ...commentsApi,
+};
+
+swaggerApi.components.schemas = {
+  ...userSchemaApi,
+  ...profileSchemaApi,
+  ...audioSchemaApi,
+  ...playlistSchemaApi,
+  ...commentSchemaApi,
+};
+
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,

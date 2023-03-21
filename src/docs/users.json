@@ -1,0 +1,425 @@
+{
+  "/users/{userId}": {
+    "get": {
+      "tags": ["Users"],
+      "summary": "Access user info",
+      "operationId": "getUser",
+      "parameters": [
+        {
+          "name": "userId",
+          "in": "path",
+          "description": "User id",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Successful operation",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/User"
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "User not found"
+        }
+      }
+    },
+    "put": {
+      "tags": ["Users"],
+      "summary": "Update user info",
+      "security": [
+        {
+          "jwt_auth": []
+        }
+      ],
+      "operationId": "updateUser",
+      "parameters": [
+        {
+          "name": "userId",
+          "in": "path",
+          "description": "User id",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "requestBody": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "language": {
+                  "type": "string"
+                },
+                "theme": {
+                  "type": "string"
+                },
+                "saveHistory": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Successful operation",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/User"
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "User not found"
+        }
+      }
+    }
+  },
+  "/users/{userId}/avatar": {
+    "patch": {
+      "tags": ["Users"],
+      "summary": "Update user avatar",
+      "security": [
+        {
+          "jwt_auth": []
+        }
+      ],
+      "operationId": "updateUserAvatar",
+      "parameters": [
+        {
+          "name": "userId",
+          "in": "path",
+          "description": "User id",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "requestBody": {
+        "content": {
+          "multipart/form-data": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "avatar": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Successful operation",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/User"
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "User not found"
+        }
+      }
+    }
+  },
+  "/users/{userId}/banner": {
+    "patch": {
+      "tags": ["Users"],
+      "summary": "Update user banner",
+      "security": [
+        {
+          "jwt_auth": []
+        }
+      ],
+      "operationId": "updateUserBanner",
+      "parameters": [
+        {
+          "name": "userId",
+          "in": "path",
+          "description": "User id",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "requestBody": {
+        "content": {
+          "multipart/form-data": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "banner": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Successful operation",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/User"
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "User not found"
+        }
+      }
+    }
+  },
+  "/users/{userId}/audios": {
+    "get": {
+      "tags": ["Users"],
+      "summary": "Get audios uploaded by user",
+      "operationId": "getUserAudios",
+      "parameters": [
+        {
+          "name": "userId",
+          "in": "path",
+          "description": "User id",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Successful operation",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Audio"
+                }
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "User not found"
+        }
+      }
+    }
+  },
+  "/users/{userId}/likes": {
+    "get": {
+      "tags": ["Users"],
+      "summary": "Get audios liked by user",
+      "operationId": "getUserLikes",
+      "parameters": [
+        {
+          "name": "userId",
+          "in": "path",
+          "description": "User id",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Successful operation",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Audio"
+                }
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "User not found"
+        }
+      }
+    }
+  },
+  "/users/{userId}/history": {
+    "get": {
+      "tags": ["Users"],
+      "summary": "Get audios listened by user",
+      "operationId": "getUserHistory",
+      "parameters": [
+        {
+          "name": "userId",
+          "in": "path",
+          "description": "User id",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Successful operation",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Audio"
+                }
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "User not found"
+        }
+      }
+    }
+  },
+  "/users/{userId}/following": {
+    "get": {
+      "tags": ["Users"],
+      "summary": "Get users following by user with id {userId}",
+      "operationId": "getUserFollowing",
+      "parameters": [
+        {
+          "name": "userId",
+          "in": "path",
+          "description": "User id",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Successful operation",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "User not found"
+        }
+      }
+    }
+  },
+  "/users/{userId}/followers": {
+    "get": {
+      "tags": ["Users"],
+      "summary": "Get users following user with id {userId}",
+      "operationId": "getUserFollowers",
+      "parameters": [
+        {
+          "name": "userId",
+          "in": "path",
+          "description": "User id",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Successful operation",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "User not found"
+        }
+      }
+    }
+  },
+  "/users/{userId}/follow": {
+    "patch": {
+      "tags": ["Users"],
+      "summary": "Follow or unfollow user",
+      "operationId": "followUser",
+      "security": [
+        {
+          "jwt_auth": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "userId",
+          "in": "path",
+          "description": "User id to follow",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Updated following user",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/User"
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "User not found"
+        }
+      }
+    }
+  }
+}

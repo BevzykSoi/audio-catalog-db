@@ -1,0 +1,201 @@
+{
+  "/audios": {
+    "get": {
+      "tags": ["Audios"],
+      "summary": "Search all audios",
+      "operationId": "getAudios",
+      "parameters": [
+        {
+          "name": "q",
+          "in": "query",
+          "description": "Search query",
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "tags",
+          "in": "query",
+          "description": "Include tags",
+          "schema": {
+            "type": "string",
+            "example": "rock, pop"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Successful operation",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Audio"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "post": {
+      "tags": ["Audios"],
+      "summary": "Upload new audio",
+      "operationId": "uploadAudio",
+      "security": [
+        {
+          "jwt_auth": []
+        }
+      ],
+      "requestBody": {
+        "content": {
+          "multipart/form-data": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "cover": {
+                  "type": "string",
+                  "format": "binary"
+                },
+                "duration": {
+                  "type": "integer"
+                },
+                "genres": {
+                  "type": "string",
+                  "example": "Rock, Pop"
+                },
+                "audio": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Successful operation"
+        }
+      }
+    }
+  },
+  "/audios/top": {
+    "get": {
+      "tags": ["Audios"],
+      "summary": "Get top liked audios",
+      "operationId": "getTopLikedAudios",
+      "responses": {
+        "200": {
+          "description": "Successful operation",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Audio"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/audios/new": {
+    "get": {
+      "tags": ["Audios"],
+      "summary": "Get new audios",
+      "operationId": "getNewdAudios",
+      "responses": {
+        "200": {
+          "description": "Successful operation",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Audio"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/audios/{audioId}": {
+    "get": {
+      "summary": "Get audio info",
+      "operationId": "getAudio",
+      "tags": ["Audios"],
+      "parameters": [
+        {
+          "name": "audioId",
+          "in": "path",
+          "description": "Audio id",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Successful operation",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Audio"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/audios/{audioId}/like": {
+    "patch": {
+      "summary": "Toggle audio like",
+      "operationId": "likeAudio",
+      "tags": ["Audios"],
+      "security": [
+        {
+          "jwt_auth": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "audioId",
+          "in": "path",
+          "description": "Audio id",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Successful operation",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Audio"
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "Audio not found"
+        }
+      }
+    }
+  }
+}

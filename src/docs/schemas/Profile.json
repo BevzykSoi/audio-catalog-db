@@ -1,0 +1,43 @@
+{
+  "Profile": {
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "string",
+        "format": "uuid",
+        "example": "123e4567-e89b-12d3-a456-426614174000"
+      },
+      "createdAt": {
+        "type": "string",
+        "format": "date-time",
+        "example": "2013-06-23T00:00:00.000Z"
+      },
+      "updatedAt": {
+        "type": "string",
+        "format": "date-time",
+        "example": "2013-06-23T00:00:00.000Z"
+      },
+      "language": {
+        "type": "string"
+      },
+      "theme": {
+        "type": "string"
+      },
+      "avatarUrl": {
+        "type": "string"
+      },
+      "bannerUrl": {
+        "type": "string"
+      },
+      "genres": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "saveHistory": {
+        "type": "boolean"
+      }
+    }
+  }
+}
