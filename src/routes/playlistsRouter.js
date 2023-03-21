@@ -4,7 +4,8 @@ const router = express.Router();
 
 const playlistController = require('../controllers/playlistController');
 const { auth, schemaValidate } = require('../middlewares/index');
-const playlistValidator = require('../validationSchemas/auth.validator');
+const playlistValidator = require('../validationSchemas/playlist.validator');
+
 router.post(
     '/',
     schemaValidate(playlistValidator.create),

@@ -9,6 +9,9 @@ exports.create = async (req, res, next) => {
       owner: req.user._id,
     });
 
+    req.user.playlists.push(newPlaylist);
+    await req.user.save();
+
     await newPlaylist.populate({
       path: 'owner',
     });
@@ -115,6 +118,9 @@ exports.delete = async (req, res, next) => {
       return;
     }
 
+    req.user.playlists.pull(deletedPlaylist);
+    await req.user.save();
+
     await deletedPlaylist.populate({
       path: 'audios',
     });
@@ -122,6 +128,7 @@ exports.delete = async (req, res, next) => {
     await deletedPlaylist.populate({
       path: 'owner',
     });
+    
 
     res.status(200).json({
       message: 'Playlist succesfully deleted!',
