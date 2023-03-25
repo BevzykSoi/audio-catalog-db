@@ -1,1 +1,153 @@
-{}
+{
+  "/playlists": {
+    "post": {
+      "tags": ["Playlists"],
+      "summary": "Create new playlist",
+      "operationId": "createPlaylist",
+      "security": [
+        {
+          "jwt_auth": []
+        }
+      ],
+      "requestBody": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "required": true
+                }
+              }
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Successful operation",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Playlist"
+              }
+            }
+          }
+        }
+      }
+    },
+    "get": {
+      "tags": ["Playlists"],
+      "summary": "Get all playlists",
+      "operationId": "getAllPlaylists",
+      "responses": {
+        "200": {
+          "description": "Successful operation",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Playlist"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/playlists/{playlistId}": {
+    "get": {
+      "tags": ["Playlists"],
+      "summary": "Get playlist by id",
+      "operationId": "getPlaylistById",
+      "parameters": [
+        {
+          "name": "playlistId",
+          "in": "path",
+          "description": "Playlist id",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Successful operation",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Playlist"
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "Playlist did not found!"
+        }
+      }
+    },
+    "put": {
+      "tags": ["Playlists"],
+      "summary": "Update playlist",
+      "operationId": "updatePlaylist",
+      "parameters": [
+        {
+          "name": "playlistId",
+          "in": "path",
+          "description": "Playlist id",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Successful operation",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Playlist"
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "Playlist did not found!"
+        }
+      }
+    },
+    "delete": {
+      "tags": ["Playlists"],
+      "summary": "Delete playlist",
+      "operationId": "deletePlaylist",
+      "parameters": [
+        {
+          "name": "playlistId",
+          "in": "path",
+          "description": "Playlist id",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Successful operation",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Playlist"
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "Playlist did not found!"
+        }
+      }
+    }
+  }
+}

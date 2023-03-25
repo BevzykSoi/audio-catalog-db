@@ -5,10 +5,9 @@ const router = express.Router();
 const multer = require('multer');
 
 const { auth, historyAuth, schemaValidate } = require('../middlewares');
-const audioValidator = require('../validationSchemas/auth.validator');
+const audioValidator = require('../validationSchemas/audios.validator');
 const audiosPath = path.join(process.cwd(), 'public/audios');
 const audioController = require('../controllers/audioController');
-const paginationMiddleware = require('../middlewares/paginationmidd');
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {

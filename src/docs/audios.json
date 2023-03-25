@@ -140,8 +140,7 @@
           "description": "Audio id",
           "required": true,
           "schema": {
-            "type": "string",
-            "format": "uuid"
+            "type": "string"
           }
         }
       ],
@@ -176,8 +175,7 @@
           "description": "Audio id",
           "required": true,
           "schema": {
-            "type": "string",
-            "format": "uuid"
+            "type": "string"
           }
         }
       ],

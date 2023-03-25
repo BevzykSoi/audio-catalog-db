@@ -151,7 +151,7 @@ exports.getAllNew = async (req, res, next) => {
       itemsCount: audiosCount,
       page,
       perPage,
-      pagesCount: Math.ceil(actorsCount / perPage),
+      pagesCount: Math.ceil(audiosCount / perPage),
     });
   } catch (error) {
     next(error);

@@ -1,1 +1,48 @@
-{}
+{
+  "/comments": {
+    "post": {
+      "tags": ["Comments"],
+      "summary": "Create new comment",
+      "operationId": "createComment",
+      "security": [
+        {
+          "jwt_auth": []
+        }
+      ],
+      "requestBody": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "text": {
+                  "type": "string",
+                  "required": true
+                },
+                "audio": {
+                  "type": "string",
+                  "required": true
+                },
+                "replyTo": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Successful operation",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Comment"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
