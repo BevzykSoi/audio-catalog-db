@@ -18,10 +18,14 @@ const notificationSchema = new Schema(
       required: true,
     },
     type: {
-        type: String,
-        enum: ['USER_FOLLOW', 'AUDIO_LIKE', 'AUDIO_COMMENT'],
-        required: true,
-    }
+      type: String,
+      enum: ['USER_FOLLOW', 'AUDIO_LIKE', 'AUDIO_COMMENT'],
+      required: true,
+    },
+    owner: {
+      type: Schema.Types.ObjectId,
+      ref: 'user',
+    },
   },
   {
     timestamps: true,

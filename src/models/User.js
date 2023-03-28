@@ -56,6 +56,10 @@ const User = new Schema(
         ref: 'audio',
       },
     ],
+    notifications: {
+      type: Schema.Types.ObjectId,
+      ref: 'notification'
+    }
   },
   {
     timestamps: true,
