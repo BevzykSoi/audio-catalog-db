@@ -24,13 +24,12 @@ const upload = multer({
 });
 router.post(
   '/',
-  schemaValidate(audioValidator.create),
   auth,
-
   upload.fields([
     { name: 'audio', maxCount: 1 },
     { name: 'cover', maxCount: 1 },
   ]),
+  schemaValidate(audioValidator.create),
   audioController.create
 );
 
