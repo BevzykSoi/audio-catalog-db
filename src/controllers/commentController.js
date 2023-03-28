@@ -1,4 +1,4 @@
-const { Comment } = require('../models/index');
+const { Comment, Notification } = require('../models/index');
 
 exports.create = async (req, res, next) => {
   try {
@@ -22,6 +22,22 @@ exports.create = async (req, res, next) => {
       path: 'replyTo',
     });
 
+    const notification = await Notification.create({
+      owner: comment.audio.author,
+      target: comment,
+      targetModel: 'comment',
+      type: 'AUDIO_COMMENT',
+      user: req.user._id,
+    });
+    await notification.populate('owner');
+    notification.owner.notifications.push(notification);
+    await notification.owner.save();
+    await notification.populate({
+      path: 'target',
+      populate: 'audio',
+    });
+    await notification.populate('user');
+    req.io.to(comment.audio.author).emit('new_notification', notification);
     res.status(201).json(comment);
   } catch (error) {
     next(error);
