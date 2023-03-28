@@ -6,12 +6,22 @@ const swagger = require('swagger-ui-express');
 const swaggerApi = require('./api.json');
 const path = require('path');
 const cloudinary = require('cloudinary').v2;
+const http = require('http');
+const socketIO = require('socket.io');
 
 require('dotenv').config();
 require('./config/db');
 require('./config/passport');
 
+const corsConfig = {
+  origin: '*',
+};
+
 const app = express();
+const httpServer = http.createServer(app);
+const io = new socketIO.Server(httpServer, {
+  cors: corsConfig,
+});
 const apiRouter = require('./routes/apiRouter');
 const errorHandler = require('./middlewares/errorHandler');
 const staticFolderPath = path.join(process.cwd(), 'public');
@@ -50,12 +60,22 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
+io.on('connection', (socket) => {
+  socket.on('join room', (roomId) => {
+    socket.join(roomId);
+  });
+});
+
 app.use(express.static(staticFolderPath));
 app.use(express.json());
 app.use(volleyball);
 app.use(helmet());
-app.use(cors({ origin: '*' }));
+app.use(cors(corsConfig));
 app.use('/docs', swagger.serve, swagger.setup(swaggerApi));
+app.use((req, res, next) => {
+  req.io = io;
+  next();
+});
 
 app.use('/api/v1', apiRouter);
 app.use(errorHandler);
