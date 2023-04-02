@@ -326,6 +326,24 @@ exports.favorite = async (req, res, next) => {
           new: true,
         }
       );
+
+      const notification = await Notification.create({
+        owner: updatedAudio.author,
+        target: updatedAudio,
+        targetModel: 'audio',
+        type: 'AUDIO_LIKE',
+        user: req.user._id,
+      });
+
+      await notification.populate('owner');
+      notification.owner.notifications.push(notification);
+      await notification.owner.save();
+
+      await notification.populate('target');
+
+      await notification.populate('user');
+
+      req.io.to(updatedAudio.author).emit('new_notification', notification);
     }
     await updatedAudio.populate('author');
 
