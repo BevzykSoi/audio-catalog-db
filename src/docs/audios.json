@@ -157,6 +157,35 @@
           }
         }
       }
+    },
+    "delete": {
+      "summary": "Delete audio info",
+      "operationId": "deleteAudio",
+      "tags": ["Audios"],
+      "parameters": [
+        {
+          "name": "audioId",
+          "in": "path",
+          "description": "Audio id",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Successful operation",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Audio"
+              }
+            }
+          }
+        }
+      }
     }
   },
   "/audios/{audioId}/like": {
