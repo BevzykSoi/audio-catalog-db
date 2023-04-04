@@ -469,8 +469,6 @@ exports.followUser = async (req, res, next) => {
       path: 'followers',
     });
 
-    
-
     res.json(userToFollow);
   } catch (error) {
     next(error);

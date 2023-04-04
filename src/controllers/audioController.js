@@ -1,4 +1,11 @@
-const { Audio, Profile, User, Comment, Playlist } = require('../models');
+const {
+  Audio,
+  Profile,
+  User,
+  Comment,
+  Playlist,
+  Notification,
+} = require('../models');
 const cloudinary = require('cloudinary').v2;
 const fs = require('fs').promises;
 
