@@ -452,9 +452,14 @@ exports.followUser = async (req, res, next) => {
       await notification.owner.save();
 
       await notification.populate('target');
-      await notification.populate('user');
+      await notification.populate({
+        path: 'user',
+        populate: {
+          path: 'profile'
+        }
+      });
 
-      req.io.to(userToFollow._id).emit('new_notification', notification);
+      req.io.to(userToFollow._id.valueOf()).emit('new_notification', notification);
     }
 
     await userToFollow.populate({

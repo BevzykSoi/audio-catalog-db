@@ -38,8 +38,12 @@ exports.create = async (req, res, next) => {
       path: 'target',
       populate: 'audio',
     });
-
-    await notification.populate('user');
+    await notification.populate({
+      path: 'user',
+      populate: {
+        path: 'profile',
+      },
+    });
 
     req.io.to(comment.audio.author).emit('new_notification', notification);
     

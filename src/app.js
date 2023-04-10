@@ -62,7 +62,7 @@ cloudinary.config({
 
 io.on('connection', (socket) => {
   socket.on('join room', (roomId) => {
-    socket.join(roomId);
+    socket.join(roomId.valueOf());
   });
 });
 

@@ -347,8 +347,12 @@ exports.favorite = async (req, res, next) => {
       await notification.owner.save();
 
       await notification.populate('target');
-
-      await notification.populate('user');
+      await notification.populate({
+        path: 'user',
+        populate: {
+          path: 'profile',
+        },
+      });
 
       req.io.to(updatedAudio.author).emit('new_notification', notification);
     }
