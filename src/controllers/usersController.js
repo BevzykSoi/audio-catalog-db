@@ -208,7 +208,7 @@ exports.getUserLikes = async (req, res, next) => {
     }
     let { page, perPage } = req.query;
     const searchFilter = {
-      author: id,
+      usersLiked: id,
     };
 
     if (!page) {
@@ -455,11 +455,13 @@ exports.followUser = async (req, res, next) => {
       await notification.populate({
         path: 'user',
         populate: {
-          path: 'profile'
-        }
+          path: 'profile',
+        },
       });
 
-      req.io.to(userToFollow._id.valueOf()).emit('new_notification', notification);
+      req.io
+        .to(userToFollow._id.valueOf())
+        .emit('new_notification', notification);
     }
 
     await userToFollow.populate({
