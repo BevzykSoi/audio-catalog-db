@@ -45,8 +45,10 @@ exports.create = async (req, res, next) => {
       },
     });
 
-    req.io.to(comment.audio.author).emit('new_notification', notification);
-    
+    req.io
+      .to(comment.audio.author.valueof())
+      .emit('new_notification', notification.toJSON());
+
     res.status(201).json(comment);
   } catch (error) {
     next(error);

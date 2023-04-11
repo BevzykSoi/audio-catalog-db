@@ -354,7 +354,9 @@ exports.favorite = async (req, res, next) => {
         },
       });
 
-      req.io.to(updatedAudio.author).emit('new_notification', notification);
+      req.io
+        .to(updatedAudio.author.valueOf())
+        .emit('new_notification', notification.toJSON());
     }
     await updatedAudio.populate('author');
 

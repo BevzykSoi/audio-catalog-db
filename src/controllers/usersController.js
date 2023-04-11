@@ -461,7 +461,7 @@ exports.followUser = async (req, res, next) => {
 
       req.io
         .to(userToFollow._id.valueOf())
-        .emit('new_notification', notification);
+        .emit('new_notification', notification.toJSON());
     }
 
     await userToFollow.populate({
