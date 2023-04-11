@@ -397,10 +397,8 @@ exports.addToPlaylist = async (req, res, next) => {
     const playlist = await Playlist.findByIdAndUpdate(
       playlistId,
       {
-        $push: {
-          audios: audio._id,
-        },
         $addToSet: {
+          audios: audio._id,
           genres: audio.genres,
         },
       },

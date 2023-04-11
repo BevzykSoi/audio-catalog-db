@@ -8,7 +8,7 @@ const notificationSchema = new Schema(
       required: true,
     },
     target: {
-      type: String,
+      type: Schema.Types.ObjectId,
       refPath: 'targetModel',
       required: true,
     },

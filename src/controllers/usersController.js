@@ -1,4 +1,4 @@
-const { User, Profile, Audio, Notification } = require('../models');
+const { User, Profile, Audio } = require('../models');
 const fs = require('fs').promises;
 const Jimp = require('jimp');
 const cloudinary = require('cloudinary').v2;
@@ -207,6 +207,7 @@ exports.getUserLikes = async (req, res, next) => {
       return;
     }
     let { page, perPage } = req.query;
+
     const searchFilter = {
       usersLiked: id,
     };
@@ -261,41 +262,9 @@ exports.getUserHistory = async (req, res, next) => {
       res.status(404).send('User did not found!');
       return;
     }
-
-    let { page, perPage } = req.query;
-    const searchFilter = {
-      author: id,
-    };
-
-    if (!page) {
-      page = 1;
-    } else {
-      page = +page;
-    }
-    if (!perPage) {
-      perPage = 12;
-    } else {
-      perPage = +perPage;
-    }
-
-    if (!user) {
-      res.status(404).send('User did not found!');
-      return;
-    }
-
-    const audios = await Audio.find(searchFilter, null, {
-      limit: perPage,
-      skip: (page - 1) * perPage,
-    }).populate('author');
-
-    const audiosCount = await Audio.count(searchFilter);
-
+    
     res.json({
-      items: audios,
-      itemsCount: audiosCount,
-      page,
-      perPage,
-      pagesCount: Math.ceil(audiosCount / perPage),
+      items: user.history,
     });
   } catch (error) {
     next(error);
@@ -438,30 +407,6 @@ exports.followUser = async (req, res, next) => {
           new: true,
         }
       );
-
-      const notification = await Notification.create({
-        owner: userToFollow._id,
-        target: userToFollow,
-        targetModel: 'user',
-        type: 'USER_FOLLOW',
-        user: req.user._id,
-      });
-
-      await notification.populate('owner');
-      notification.owner.notifications.push(notification);
-      await notification.owner.save();
-
-      await notification.populate('target');
-      await notification.populate({
-        path: 'user',
-        populate: {
-          path: 'profile',
-        },
-      });
-
-      req.io
-        .to(userToFollow._id.valueOf())
-        .emit('new_notification', notification);
     }
 
     await userToFollow.populate({
@@ -496,7 +441,7 @@ exports.deleteUser = async (req, res) => {
       return;
     }
     res.json({
-      message: `User successfully deleted!`,
+      message: `User successfully deleted`,
     });
   } catch (error) {
     next(error);
