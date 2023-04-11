@@ -468,14 +468,6 @@ exports.followUser = async (req, res, next) => {
       path: 'profile',
     });
 
-    await userToFollow.populate({
-      path: 'following',
-    });
-
-    await userToFollow.populate({
-      path: 'followers',
-    });
-
     res.json(userToFollow);
   } catch (error) {
     next(error);

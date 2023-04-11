@@ -213,7 +213,8 @@ exports.getById = async (req, res, next) => {
     if (!audio) {
       res.status(400).send('Audio did not found!');
     }
-
+    audio.listenCount++;
+    await audio.save();
     await req.user.populate({
       path: 'profile',
     });
