@@ -37,6 +37,7 @@ const profileSchemaApi = require('./docs/schemas/Profile.json');
 const audioSchemaApi = require('./docs/schemas/Audio.json');
 const playlistSchemaApi = require('./docs/schemas/Playlist.json');
 const commentSchemaApi = require('./docs/schemas/Comment.json');
+const notificationSchemaApi = require('./docs/schemas/Notification.json');
 
 swaggerApi.paths = {
   ...authApi,
@@ -52,6 +53,7 @@ swaggerApi.components.schemas = {
   ...audioSchemaApi,
   ...playlistSchemaApi,
   ...commentSchemaApi,
+  ...notificationSchemaApi,
 };
 
 cloudinary.config({

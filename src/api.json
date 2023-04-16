@@ -26,6 +26,12 @@
     },
     {
       "name": "Playlists"
+    },
+    {
+      "name": "Notifications"
+    },
+    {
+      "name": "Comments"
     }
   ],
   "paths": {},
