@@ -1,0 +1,38 @@
+{
+  "Notification": {
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "string",
+        "example": "123e4567-e89b-12d3-a456-426614174000"
+      },
+      "createdAt": {
+        "type": "string",
+        "format": "date-time",
+        "example": "2013-06-23T00:00:00.000Z"
+      },
+      "updatedAt": {
+        "type": "string",
+        "format": "date-time",
+        "example": "2013-06-23T00:00:00.000Z"
+      },
+      "user": {
+        "$ref": "#/components/schemas/User"
+      },
+      "target": {
+        "$ref": "#/components/schemas/Notification/properties/targetModel"
+      },
+      "targetModel": {
+        "type": "string",
+        "enum": ["user", "audio", "comment"]
+      },
+      "type": {
+        "type": "string",
+        "enum": ["USER_FOLLOW", "AUDIO_LIKE", "AUDIO_COMMENT"]
+      },
+      "owner": {
+        "$ref": "#/components/schemas/User"
+      }
+    }
+  }
+}

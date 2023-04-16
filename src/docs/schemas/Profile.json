@@ -17,10 +17,12 @@
         "example": "2013-06-23T00:00:00.000Z"
       },
       "language": {
-        "type": "string"
+        "type": "string",
+        "enum": ["en", "ua"]
       },
       "theme": {
-        "type": "string"
+        "type": "string",
+        "enum": ["light", "dark"]
       },
       "avatarUrl": {
         "type": "string"
@@ -31,7 +33,19 @@
       "genres": {
         "type": "array",
         "items": {
-          "type": "string"
+          "type": "string",
+          "enum": [
+            "Pop",
+            "Rock",
+            "Jazz",
+            "Traditional",
+            "Hip-Hop",
+            "Electronic",
+            "Folk",
+            "Indi",
+            "Country",
+            "Classical"
+          ]
         }
       },
       "saveHistory": {

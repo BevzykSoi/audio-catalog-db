@@ -31,7 +31,19 @@
       "genres": {
         "type": "array",
         "items": {
-          "type": "string"
+          "type": "string",
+          "enum": [
+            "Pop",
+            "Rock",
+            "Jazz",
+            "Traditional",
+            "Hip-Hop",
+            "Electronic",
+            "Folk",
+            "Indi",
+            "Country",
+            "Classical"
+          ]
         }
       }
     }
