@@ -482,3 +482,22 @@ exports.getUserPlaylists = async (req, res, next) => {
     next(error);
   }
 };
+
+exports.getUserNotifications = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+
+    const user = await User.findById(id).populate({
+      path: 'notifications',
+    });
+
+    if (!user) {
+      res.status(404).send('User did not found!');
+      return;
+    }
+
+    res.json(user.notifications);
+  } catch (error) {
+    next(error);
+  }
+};

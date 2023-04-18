@@ -26,5 +26,6 @@ router.get('/:id/followers', usersController.getUserFollowers);
 router.patch('/:id/follow', auth, usersController.followUser);
 router.delete('/:id', auth, usersController.deleteUser);
 router.get('/:id/playlists', usersController.getUserPlaylists);
+router.get('/:id/notifications', usersController.getUserNotifications);
 
 module.exports = router;
