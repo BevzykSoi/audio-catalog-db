@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+mongoose.set('strictPopulate', false);
 
 mongoose
   .connect(process.env.MONGODB_URI)
