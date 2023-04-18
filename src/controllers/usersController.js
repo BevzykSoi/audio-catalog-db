@@ -1,4 +1,4 @@
-const { User, Profile, Audio } = require('../models');
+const { User, Profile, Audio, Notification } = require('../models');
 const fs = require('fs').promises;
 const Jimp = require('jimp');
 const cloudinary = require('cloudinary').v2;

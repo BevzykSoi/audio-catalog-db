@@ -46,7 +46,7 @@ exports.create = async (req, res, next) => {
     });
 
     req.io
-      .to(comment.audio.author.valueof())
+      .to(comment.audio.author.valueOf())
       .emit('new_notification', notification.toJSON());
 
     res.status(201).json(comment);
