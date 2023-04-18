@@ -501,11 +501,6 @@ exports.getUserNotifications = async (req, res, next) => {
         populate: 'profile',
       });
 
-    if (!notifications.user) {
-      res.status(404).send('User did not found!');
-      return;
-    }
-
     res.json(notifications);
   } catch (error) {
     next(error);
