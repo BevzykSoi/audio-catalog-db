@@ -487,16 +487,26 @@ exports.getUserNotifications = async (req, res, next) => {
   try {
     const { id } = req.params;
 
-    const user = await User.findById(id).populate({
-      path: 'notifications',
-    });
+    const notifications = await Notification.find({ owner: id })
+      .populate({
+        path: 'target',
+        populate: 'audio',
+      })
+      .populate({
+        path: 'user',
+        populate: 'profile',
+      })
+      .populate({
+        path: 'owner',
+        populate: 'profile',
+      });
 
-    if (!user) {
+    if (!notifications.user) {
       res.status(404).send('User did not found!');
       return;
     }
 
-    res.json(user.notifications);
+    res.json(notifications);
   } catch (error) {
     next(error);
   }
