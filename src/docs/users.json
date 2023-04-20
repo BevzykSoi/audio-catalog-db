@@ -481,5 +481,38 @@
         }
       }
     }
+  },
+  "/users/{userId}/notifications": {
+    "get": {
+      "tags": ["Users"],
+      "summary": "Get notifications of user",
+      "operationId": "getUserNotifications",
+      "parameters": [
+        {
+          "name": "userId",
+          "in": "path",
+          "description": "User id",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Successful operation",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Notification"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
   }
 }
